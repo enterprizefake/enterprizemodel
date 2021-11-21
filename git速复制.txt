@@ -1,0 +1,14 @@
+git init #初始化文件 只运行一次
+
+git remote add origin git@github.com:enterprizefake/enterprizemodel.git  #添加远程仓库 ssh墙的影响较小 运行成功无需重复运行
+git remote set-url git@github.com:enterprizefake/enterprizemodel.git #修改仓库地址 如果你已经add了
+
+
+git add ./  #添加文件
+git commit -m "first commit" 
+git branch -M main_flask # 请branch自己的分支 最好以自己名字字母大写 flask_xxx 你有flask项目才branch  不要两个都branch
+
+
+git branch -M main_vue #请branch自己的分支 最好以自己名字字母大写 vue_xxx 你有vue项目才branch  不要两个都branch
+
+git push -u origin main #上传分支 请push自己的分支
