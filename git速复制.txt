@@ -6,9 +6,14 @@ git remote set-url git@github.com:enterprizefake/enterprizemodel.git #修改仓�
 
 git add ./  #添加文件
 git commit -m "first commit" 
-git branch -M main_flask # 请branch自己的分支 最好以自己名字字母大写 flask_xxx 你有flask项目才branch  不要两个都branch
+
+# 请branch自己的分支 最好以自己名字字母大写 flask_xxx 你有flask项目才branch  
+#不要两个都branch
+git branch -M main_flask 
 
 
-git branch -M main_vue #请branch自己的分支 最好以自己名字字母大写 vue_xxx 你有vue项目才branch  不要两个都branch
+#请branch自己的分支 最好以自己名字字母大写 vue_xxx 你有vue项目才branch  
+#不要两个都branch
+git branch -M main_vue 
 
-git push -u origin main #上传分支 请push自己的分支
+git push -u origin main_flask #上传分支 请push自己的分支
