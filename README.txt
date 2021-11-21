@@ -1,0 +1,8 @@
+pip install flask
+pip install flask-sqlalchemy
+pip install flask-sqlacodegen
+pip install flask-cors
+
+flask-sqlacodegen "mysql://enteam:123456@1.15.184.52:3306/flusktest"  --outfile "./database/models.py" --flask #生成数据库py文件
+
+router 放置 template.py修改后的文件
