@@ -24,9 +24,6 @@ def test():
         C_Testb:wrappers.Collection
         C_Testb =mongo[fileConfig.dbname].get_collection(fileConfig.defaultCollection)
         
-        
-    
-        
         print("-----------------------------------",mongo.db)
         C_Testb.insert_one(
             {"a":"ffffff",}  
@@ -149,3 +146,4 @@ def downloadfromstore(id):
                 "result":str(e)
             }
         )
+        

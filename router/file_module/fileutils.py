@@ -1,9 +1,7 @@
-from io import TextIOWrapper
-import io
+
 from flask_pymongo import PyMongo,MongoClient
 import gridfs
 from flask_pymongo import wrappers
-from matplotlib.cbook import file_requires_unicode
 from .fileconfig import fileConfig
 from werkzeug.datastructures import FileStorage
 
@@ -55,4 +53,53 @@ def downloadfromMongo(mongo:MongoClient,id:str)->gridfs.GridOut:
         obj=i
     
     return obj
+
+def deletefromMongo(mongo:MongoClient,id:str):
+    '''
+    None表示无对应id
+    '''
+    bucket=gridfs.GridFSBucket(mongo[fileConfig.dbName],bucket_name=fileConfig.defaultBucket)
+    find_=bucket.find({"_id":ObjectId(id)})
+    if(find_.next()==None):
+        return None
+    bucket.delete(ObjectId(id))
+    return id
+
+
+def updatetoMongo(mongo:MongoClient,id:str,file_:FileStorage):
+    
+    '''
+    
+    '''
+    bucket=gridfs.GridFSBucket(mongo[fileConfig.dbName],bucket_name=fileConfig.defaultBucket)
+    find_=bucket.find({"_id":ObjectId(id)})
+    if(find_.next()==None):
+        return None
+    
+    
+    '''
+    uploadfile
+    '''
+    ret_id=None
+    
+    with  bucket.open_upload_stream(file_.filename,
+                    metadata={"contentType": file_.mimetype,
+                  "content_type": file_.mimetype,
+                
+                  }) as file_in:
+        file_in.content_type=file_.mimetype
+        file_in.write(file_.stream)
+        file_in.close()
+
+    ret_id=file_in._id
+    
+    
+    '''
+    deletefile
+    '''
+    bucket.delete(ObjectId(id))
+    
+    return ret_id
+
+
     
