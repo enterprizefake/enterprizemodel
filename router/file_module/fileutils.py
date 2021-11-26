@@ -4,11 +4,6 @@ import gridfs
 from flask_pymongo import wrappers
 from .fileconfig import fileConfig
 from werkzeug.datastructures import FileStorage
-
-
-
-from io import BytesIO
-
 from bson.objectid import ObjectId
 
 def uploadtoMongo(mongo:MongoClient,file_:FileStorage,):
@@ -100,6 +95,13 @@ def updatetoMongo(mongo:MongoClient,id:str,file_:FileStorage):
     bucket.delete(ObjectId(id))
     
     return ret_id
+
+
+
+
+
+
+
 
 
     

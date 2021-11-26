@@ -1,9 +1,26 @@
 
 
-from email.policy import default
+
 
 
 class fileConfig:
     dbName="test"
     defaultBucket="testbucket"
-    defaultCollection="Testb"
+    defaultCollection="Filedb"
+    
+    
+# try:
+#         state=deletefromMongo(mongo,id)
+#         return jsonify(
+#             {
+#               "id":str(state),
+#              "result":"success"
+#             }
+#         )
+#     except Exception as e:
+#         print(e)
+#         return jsonify(
+#             {
+#                 "result":str(e)
+#             }
+#         )
