@@ -81,15 +81,21 @@ def haspath(steps,projectroot:dict):
 def findpathsubfiles(steps,projectroot:dict):
     
     now_step=projectroot
-    now_step_back:dict
+    files=[]
+   
+    
+    refs=dict()
+    
     updatetrackroot:dict
     update_track=dict()
     updatetrackroot=update_track
-    files=[]
+    
     for i in steps:
         # files+=now_step.get("files",[])
         now_step_back=now_step
+        
         now_step=now_step.get(i,None)
+        refs['now']=now_step
         # print("nowstep",now_step)
         # print("fetch",i)
         if now_step==None:
@@ -98,6 +104,7 @@ def findpathsubfiles(steps,projectroot:dict):
             )
         update_track[i]=dict()
         update_track=update_track[i]
+    
     
     def walk(d):
       for k, v in d.items():
@@ -108,9 +115,13 @@ def findpathsubfiles(steps,projectroot:dict):
             if k=='?files?' and isinstance(v,list):
                 # print("?files",v)
                 files.extend(v)
+    
+    
+    print("nowstep:",refs['now'])
+    walk(refs['now'])
+
     # print("walk",now_step_back)           
-    walk(now_step_back)
-                
+    
     
     return (files,"has path")
 # utils------------------------------------------------end
@@ -182,9 +193,9 @@ def createfolder(projectfileid,rootpath:str,foldername:str,collection_:wrappers.
     check folder repeated
     '''
     Cursor_result=collection_.find(
-        {
+        
             {".".join(steps): { '$exists': True }}
-        }
+        
     )
     if Cursor_result.count()>0:
         return (None,"repeated folder")
@@ -203,7 +214,7 @@ def createfolder(projectfileid,rootpath:str,foldername:str,collection_:wrappers.
         }
     )
     return(
-                None,"add_success"
+                None,"addfolder_success"
             )
     pass
 
@@ -238,6 +249,8 @@ def deletefolder(projectfileid,rootpath:str,collection_:wrappers.Collection,mong
     
     
     (files,info)=findpathsubfiles(steps,projectroot)
+    
+    print("steps",steps)
     print("projectroot",projectroot)
     print("files:",files)
     
@@ -331,12 +344,12 @@ def createfile(projectfileid,rootpath:str,file_:FileStorage,collection_:wrappers
         },
         {
             "$push":{
-                 ".".join(steps)+".?files?":str(file_id)
+                 ".".join(steps)+".?files?":str(file_id['id'])
             }
         }
     )
     return(
-                str(file_id),"createfile_success"
+                file_id,"createfile_success"
             )
     
     
@@ -358,7 +371,7 @@ def updatefile(file_id:str,file_name:str,bucket_:gridfs.GridFSBucket):
     bucket_.rename(ObjectId(file_id),file_name)
         
     
-    return (True,"update_success")
+    return (True,"updatefile_success")
         
     
     

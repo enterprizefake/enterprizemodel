@@ -28,7 +28,16 @@ def uploadtoMongo(mongo:MongoClient,file_:FileStorage,):
         file_in.write(file_.stream)
         file_in.close()
     print(file_.mimetype,file_.filename)
-    return file_in._id
+    i=file_in
+    return (
+        {     "name":i.name,
+               "lenth":i.length,
+              "ch_size":i.chunk_size,
+            "con_type":i.content_type,
+            "id":str(i._id),
+           "last_date":i.upload_date,
+          "md5":i.md5,}
+    )
     pass
 
 

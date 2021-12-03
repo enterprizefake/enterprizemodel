@@ -120,12 +120,23 @@ def getprojectrootinfo(rootid):
         
         print("_____",[ ObjectId(i) for i in files])
         filemap=dict()
-        for c in cursor:
-            print(type(c))
+        from bson.json_util import dumps
+        for i in cursor:
+            i.close()
+            obj_={
+                        "name":i.name,
+                        "lenth":i.length,
+                        "filetype":i.content_type,
+                        "fileid":str(i._id),
+                        "last_date":i.upload_date,
+                        "md5":i.md5,
+                        "meta":i.metadata
+            }
+            filemap[str(i._id)]=obj_
         
         print(files,cursor.count())
-        for k,v in filemap:
-            v['_id']=str(v['_id'])
+        # for k,v in filemap:
+        #     v['_id']=str(v['_id'])
         
         print(filemap)
         
@@ -133,7 +144,7 @@ def getprojectrootinfo(rootid):
         return jsonify(
             {
                 "info":pathroot,
-                # "filemap":filemap,
+                "filemap":filemap,
                 "result":"success"
             }
         )
@@ -330,7 +341,7 @@ def deletefolder():
         rootname=json_['rootname']
         rootid=json_["rootid"]
         from .folder import deletefolder
-        (obj,info)=deletefolder(rootid,rootname,mongo[fileConfig.dbName].get_collection(fileConfig.defaultCollection))
+        (obj,info)=deletefolder(rootid,rootname,mongo[fileConfig.dbName].get_collection(fileConfig.defaultCollection),mongo)
         return jsonify(
             {
               "info":str(info),
@@ -421,7 +432,7 @@ def operationfile(operationtype):
                 obj="None"
             return jsonify(
             {
-             "file_id":obj,
+             "file":obj,
              "info":info,
              "result":"success"
             })
