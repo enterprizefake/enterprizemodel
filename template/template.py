@@ -1,12 +1,13 @@
 from flask import Blueprint
 from flask import jsonify
 from flask import request
+from utils import modelparser;
 appblueprint = Blueprint('_blueprint', __name__)
 #appblueprint注意改名xx..x(自定义)blueprint 不然大家都用appblueprint会造成重复导入
 from Starter import db
 
 #数据库模型导入
-from database.models import Json
+from database.models import User
 
 
 
@@ -22,14 +23,26 @@ def hellojson(name):
 
 @appblueprint.route("/alljson")
 def sqlall():
-    all=db.session.query(Json).all()
-
+    all=db.session.query(User).all()
+    
     test={"result":[{
-        "key":i.key,
-        "value":i.value,
-        "index":i.index
+           'username':i.username,
+    'employee_id' :i.employee_id,
+    'password':i.password 
         
         }for i in all]}
+    return jsonify(test)
+
+@appblueprint.route("/alljsonwithparser")
+def sqlallparser():
+    all=db.session.query(User).all()
+    # for i in all:
+    #     print(":",i.__dict__) 
+
+    test={"result":[modelparser.SqlToDict(i).to_dict() for i in all]}
+    
+    
+
     return jsonify(test)
 
 #/insert?key=lol&value=巴卜
@@ -39,7 +52,7 @@ def insert():
     
         key=request.args.get("key")
         value=request.args.get("value")
-        db.session.add(Json(key=key,value=value))
+        db.session.add(User(key=key,value=value))
         db.session.commit()
         return jsonify(
             {
@@ -59,10 +72,10 @@ def insert():
 def replace(key,newvalue):
     try:
         # db.session.
-        db.session.query(Json).filter(Json.key==key).update({
-            Json.value:newvalue
-        })
-        db.session.commit()
+        # db.session.query(Json).filter(Json.key==key).update({
+        #     Json.value:newvalue
+        # })
+        # db.session.commit()
         return jsonify(
             {
                 

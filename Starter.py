@@ -17,7 +17,7 @@ CORS(app,supports_credentials=True)
 
 
 
-SQLALCHEMY_DATABASE_URI = '''mysql://enteam:123456@1.15.184.52:3306/flusktest'''
+SQLALCHEMY_DATABASE_URI = '''mysql://enteam:123456@1.15.184.52:3306/flasktest'''
 MONGODB_URI="mongodb://superuser:superadmin@1.15.184.52:27017/test?authSource=admin"
 
 

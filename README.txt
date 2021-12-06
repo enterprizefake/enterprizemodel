@@ -24,3 +24,6 @@ flask请按照本文件布局
 gitupdate.bat 是自动执行更新你的分支的脚本 但需要你的设置 前提是你那个发的git教程你看了 不然没用
 
 git init的时候请 新建自己的分支
+
+#12/5新增
+app.register_blueprint(restapi, url_prefix='/webservice')#增加前缀 比如 /mytest变成 /webservice/mytest

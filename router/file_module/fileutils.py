@@ -19,10 +19,13 @@ def uploadtoMongo(mongo:MongoClient,file_:FileStorage,):
     #     #     file_.mimetype_params.items()
         
     # )
+    
+    userid=file_.mimetype_params["userid"]
+    level=file_.mimetype_params["level"]
     with  bucket.open_upload_stream(file_.filename,
-                    metadata={"contentType": file_.mimetype,
-                  "content_type": file_.mimetype,
-                
+                    metadata={
+                        "userid":userid,
+                        "level":int(level)
                   }) as file_in:
         file_in.content_type=file_.mimetype
         file_in.write(file_.stream)

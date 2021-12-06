@@ -6,14 +6,13 @@ from flask import Blueprint
 from flask import jsonify
 from flask import request,send_file
 import gridfs
-from numpy import iinfo
 
 fileblueprint = Blueprint('file_blueprint', __name__)
 #appblueprint注意改名xx..x(自定义)blueprint 不然大家都用appblueprint会造成重复导入
 from Starter import db,mongo
 from .fileconfig import fileConfig
 #数据库模型导入
-from database.models import Json
+
 from flask_pymongo import wrappers
 
 #ref
@@ -413,14 +412,14 @@ def operationfile(operationtype):
         elif operationtype=='create':
             projectid=request.args['rootid']
             rootpath=request.args['rootname']
-            
+            userid=request.args["userid"]
+            level=request.args["level"]
             from .folder import createfile
             
             uploaded_file=request.files['file']
             if uploaded_file.filename != '':
-                
-            
-            
+                uploaded_file.mimetype_params["userid"]=userid
+                uploaded_file.mimetype_params["level"]=level
                 (obj,info)=createfile(projectid,rootpath
                                     ,uploaded_file
                            ,mongo[fileConfig.dbName].get_collection(fileConfig.defaultCollection) 
