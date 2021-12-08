@@ -17,7 +17,7 @@ class Client(db.Model):
     client_third = db.Column(db.String(20))
     client_tele = db.Column(db.String(20), primary_key=True, nullable=False)
 
-    project = db.relationship('Project', primaryjoin='Client.project_id == Project.project_id', backref='clients')
+    project = db.relationship('Project', primaryjoin='Client.project_id == Project.project_id')
 
 
 class Employee(db.Model):
@@ -26,11 +26,11 @@ class Employee(db.Model):
     employee_id = db.Column(db.Integer, primary_key=True)
     employee_name = db.Column(db.String(20), nullable=False)
     employee_age = db.Column(db.Integer)
-    employee_office = db.Column(db.String(20), nullable=False)
-    employee_tele = db.Column(db.String(20))
+    employee_office = db.Column(db.String(64), nullable=False)
+    employee_tele = db.Column(db.String(32))
     employee_capability = db.Column(db.Integer)
     employee_workattitude = db.Column(db.Integer)
-    department = db.Column(db.String(20))
+    department = db.Column(db.String(64))
 
 
 class User(Employee):
@@ -50,7 +50,7 @@ class EmployeeMessage(db.Model):
     message_content = db.Column(db.String(500))
     message_zt = db.Column(db.Integer, nullable=False)
 
-    employee = db.relationship('Employee', primaryjoin='EmployeeMessage.employee_id == Employee.employee_id', backref='employee_messages')
+    employee = db.relationship('Employee', primaryjoin='EmployeeMessage.employee_id == Employee.employee_id')
 
 
 class EmployeeOperate(db.Model):
@@ -61,7 +61,7 @@ class EmployeeOperate(db.Model):
     operate_date = db.Column(db.Date)
     operate_what = db.Column(db.String(200))
 
-    employee = db.relationship('Employee', primaryjoin='EmployeeOperate.employee_id == Employee.employee_id', backref='employee_operates')
+    employee = db.relationship('Employee', primaryjoin='EmployeeOperate.employee_id == Employee.employee_id')
 
 
 class EmployeeProject(db.Model):
@@ -74,8 +74,8 @@ class EmployeeProject(db.Model):
     ep_tuanduiid = db.Column(db.String(20))
     evaluate = db.Column(db.Integer)
 
-    employee = db.relationship('Employee', primaryjoin='EmployeeProject.employee_id == Employee.employee_id', backref='employee_projects')
-    project = db.relationship('Project', primaryjoin='EmployeeProject.project_id == Project.project_id', backref='employee_projects')
+    employee = db.relationship('Employee', primaryjoin='EmployeeProject.employee_id == Employee.employee_id')
+    project = db.relationship('Project', primaryjoin='EmployeeProject.project_id == Project.project_id')
 
 
 class Project(db.Model):
@@ -106,4 +106,4 @@ class ProjectFile(db.Model):
     projectfile_path = db.Column(db.String(100), nullable=False)
     projectfile_time = db.Column(db.Date, nullable=False)
 
-    project = db.relationship('EmployeeProject', primaryjoin='and_(ProjectFile.project_id == EmployeeProject.project_id, ProjectFile.employee_id == EmployeeProject.employee_id)', backref='project_files')
+    project = db.relationship('EmployeeProject', primaryjoin='and_(ProjectFile.project_id == EmployeeProject.project_id, ProjectFile.employee_id == EmployeeProject.employee_id)')

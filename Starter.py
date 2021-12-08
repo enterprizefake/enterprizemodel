@@ -33,12 +33,18 @@ db=SQLAlchemy(app)
 #导入blueprint
 from template.template import appblueprint
 from router.file_module.file import fileblueprint
+from router.director.director import directorblueprint
+from router.front.front import frontprint
+from router.monitor.monitor import monitorblueprint 
 
 
 #--------------------------------------------
 #加载blueprint
 app.register_blueprint(appblueprint)
 app.register_blueprint(fileblueprint)
+app.register_blueprint(directorblueprint,url_prefix="/director")
+app.register_blueprint(frontprint,url_prefix="/front")
+app.register_blueprint(monitorblueprint,url_prefix="/moniterapi")
 
 
 #___________________________________________
