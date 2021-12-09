@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_cors import *
 from flask_pymongo import PyMongo,MongoClient
+from flask_socketio import SocketIO
 import traceback
 import logging
 
@@ -23,12 +24,13 @@ MONGODB_URI="mongodb://superuser:superadmin@1.15.184.52:27017/test?authSource=ad
 
 app.config['SQLALCHEMY_DATABASE_URI']=SQLALCHEMY_DATABASE_URI
 # app.config["MONGO_URI"] = MONGODB_URI
-
+app.config["SECRET_KEY"] = "sdfsdfssefe"
 app.config["JSON_AS_ASCII"] = False
 # mongo = PyMongo(app)
 # mongo=PyMongo(app,uri=MONGODB_URI)
 mongo=MongoClient(MONGODB_URI)
 db=SQLAlchemy(app)
+socketio = SocketIO(app)
 
 #导入blueprint
 from template.template import appblueprint
@@ -49,17 +51,23 @@ app.register_blueprint(monitorblueprint,url_prefix="/moniterapi")
 
 #___________________________________________
 
+#导入socket
+from flask_socketio import Namespace
+from router.monitor.monitor import MonitorSocket
+socketio.on_namespace(MonitorSocket("/monsocket"))
 
-@app.route("/")
-def index():
-    return "index! "
+#_______________________________________________
+
+
 
 if __name__=="__main__":
     try:
-        app.run(debug=True,port=8086,use_reloader=True)
+        socketio.run(app,debug=True,port=8086,use_reloader=True);
+        # app.run(debug=True,port=8086,use_reloader=True)
     except Exception :
         traceback.print_exc()
     finally:
+        
         mongo.close()
         # print(get_trace)
         

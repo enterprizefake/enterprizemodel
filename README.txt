@@ -3,8 +3,11 @@ pip install flask-sqlalchemy
 pip install flask-sqlacodegen
 pip install flask-cors
 pip install flask_pymongo #11/21新增
-
+pip install flask-socketio #12/9新增
+pip install gevent-websocket
+pip install eventlet
 flask-sqlacodegen "mysql://enteam:123456@1.15.184.52:3306/flusktest"  --outfile "./database/models.py" --flask #生成数据库py文件 一定cd 到此文件夹后 不然位置是错的
+
 或者运行 codegen.bat
 
 router 放置 template.py修改后的文件
