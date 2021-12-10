@@ -1,3 +1,4 @@
+#环境 install.txt
 pip install flask
 pip install flask-sqlalchemy
 pip install flask-sqlacodegen
