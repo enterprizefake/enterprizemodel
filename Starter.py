@@ -23,6 +23,11 @@ MONGODB_URI="mongodb://superuser:superadmin@1.15.184.52:27017/test?authSource=ad
 
 
 app.config['SQLALCHEMY_DATABASE_URI']=SQLALCHEMY_DATABASE_URI
+app.config['SQLALCHEMY_ENGINE_OPTIONS']={
+    'pool_size' : 10,
+    'pool_recycle':120,
+    'pool_pre_ping': True
+}
 # app.config["MONGO_URI"] = MONGODB_URI
 app.config["SECRET_KEY"] = "sdfsdfssefe"
 app.config["JSON_AS_ASCII"] = False

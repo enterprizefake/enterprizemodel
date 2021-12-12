@@ -1,3 +1,4 @@
+
 from flask import Blueprint
 from flask import jsonify
 from flask import request
@@ -83,7 +84,9 @@ def mlogin():
                 "result":"fail",
                 "info":str(e)
             }
-        )    
+        )
+    finally:
+        db.session.close()
 
 @monitorblueprint.route("/timer",methods=['POST'])
 def mtimer():
@@ -112,7 +115,9 @@ def mtimer():
                 "result":"fail",
                 "info":str(e)
             }
-        )        
+        )
+    finally:
+        db.session.close()        
 
 
 @monitorblueprint.route("/logout",methods=["POST"])
@@ -167,7 +172,9 @@ def mlogout():
                 "result":"fail",
                 "info":str(e)
             }
-        )    
+        )
+    finally:
+        db.session.close()    
 
 
 

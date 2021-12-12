@@ -11,7 +11,7 @@ from Starter import db
 
 # https://segmentfault.com/a/1190000022883552
 #数据库模型导入
-from database.models import User,Project,EmployeeProject,Employee
+from database.models import User,Project,EmployeeProject,Employee,Client
 
 
 
@@ -48,6 +48,8 @@ def newproject():
                 "info":str(e)
             }
         )
+    finally:
+        db.session.close()
 
 
 @directorblueprint.route("/myproject",methods=["POST"])
@@ -80,6 +82,9 @@ def myproject():
                 "info":str(e)
             }
         )
+    finally:
+        
+        db.session.close()
         
 
 
@@ -124,7 +129,46 @@ def op_project():
                 "info":str(e)
             }
         )
+    finally:
+        
+        db.session.close()
 
+
+@directorblueprint.route("/search_client",methods=["POST"])
+def search_client():
+    try:
+        state="yes"
+        json_= request.get_json()
+        value_=json_["value"]
+        # _client=Client()
+        _clients=db.session.query(Client).filter(
+            Client.client_first==value_[0],Client.client_second==value_[1]
+            ,Client.client_third==value_[2]
+        ).all()
+        
+        customer_list=[]
+        for item in _clients:
+            customer_list.append(item.client_name)
+
+        return jsonify(
+            {
+                "customer_list":customer_list,
+                "state":state
+            }
+        )
+        
+        
+    except Exception as e:
+        print(e)
+        return jsonify(
+            {
+                "state":"no",
+                "info":str(e)
+            }
+        ) 
+    finally:
+        print("finallly")
+        db.session.close()   
     # try:
     #     state="yes"
     #     json_= request.get_json()
@@ -144,24 +188,6 @@ def op_project():
     #             "info":str(e)
     #         }
     #     )
-
-def search_client():
-    try:
-        state="yes"
-        json_= request.get_json()
-  
-
-        db.session.commit()
-        return jsonify(
-            {
-                "state":state
-            }
-        )
-    except Exception as e:
-        print(e)
-        return jsonify(
-            {
-                "state":"no",
-                "info":str(e)
-            }
-        )    
+    # finally:
+    #     print("finallly")
+    #     db.session.close()

@@ -37,6 +37,8 @@ def newclient():
                 "info":str(e)
             }
         )
+    finally:
+        db.session.close()
 
 @frontprint.route("/newemployee",methods=["POST"])
 def newemployee():
@@ -83,6 +85,8 @@ def newemployee():
                 "info":str(e)
             }
         )
+    finally:
+        db.session.close()
 
 
 
