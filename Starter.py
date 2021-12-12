@@ -10,7 +10,7 @@ import logging
 
 
 app =Flask(__name__)
-CORS(app,supports_credentials=True)
+CORS(app,supports_credentials=True,max_age=36000)
 
 
 
@@ -67,7 +67,7 @@ if __name__=="__main__":
     except Exception :
         traceback.print_exc()
     finally:
-        
+        db.session.close_all()
         mongo.close()
         # print(get_trace)
         
