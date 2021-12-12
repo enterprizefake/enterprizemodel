@@ -31,3 +31,10 @@ kill 24368;
 kill 24367;
 kill 24366;
 ```
+## 2. sleep连接
+生成删除代码
+``` sql
+select concat('KILL ',id,';') from information_schema.processlist
+where user='enteam' 
+```
+
