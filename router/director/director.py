@@ -19,21 +19,38 @@ from database.models import User,Project,EmployeeProject,Employee,Client
 def newproject():
     try:
         state="yes"
-        json_= request.get_json()["project"]
+        raw_json= request.get_json()
+        
+
+        
+        
+        
+        
+        json_= raw_json["project"]
         _proj=Project(
                 # project_id =,
-    project_name = json_["project_name"],
-    project_begindate = to_pythontime(json_["project_begindate"]),
-    project_period = json_["project_period"],
-    # project_price = ,
-    # project_enddate = db.Column(db.Date)
-    project_periodstage = json_["project_periodstage"],
-    project_type = json_["project_type"],
-    project_state = json_["project_state"],
+        project_name = json_["project_name"],
+        project_begindate = to_pythontime(json_["project_begindate"]),
+        project_period = json_["project_period"],
+        # project_price = ,
+        # project_enddate = db.Column(db.Date)
+        project_periodstage = json_["project_periodstage"],
+        project_type = json_["project_type"],
+        project_state = json_["project_state"],
     # amendments = db.Column(db.Text)
         )
         
         db.session.add(_proj)
+        
+        db.session.flush()
+        _emproj=EmployeeProject()
+        _emproj.employee_id=raw_json['employee_id']
+        _emproj.ep_function=raw_json['employee_function']
+        _emproj.project_id=_proj.project_id
+        print("projectid:",_emproj.project_id)
+        
+        db.session.add(_emproj)
+        
         db.session.commit()
         return jsonify(
             {
@@ -52,12 +69,15 @@ def newproject():
         db.session.close()
 
 
-@directorblueprint.route("/myproject",methods=["POST"])
+@directorblueprint.route("/allproject",methods=["POST"])
 def myproject():
     try:
         state="yes"
         json_= request.get_json()
         employee_id=json_["employee_id"]
+        
+        
+        #查看自己id相关的项目
         _projects=db.session.query(Project,EmployeeProject)\
         .filter(Project.project_id==EmployeeProject.project_id)\
         .filter(EmployeeProject.employee_id==int(employee_id))\
@@ -70,7 +90,7 @@ def myproject():
         # print(_projects)
         return jsonify(
             {
-                "myproeject":ret_,
+                "allproject":ret_,
                 "state":state
             }
         )
@@ -88,7 +108,7 @@ def myproject():
         
 
 
-@directorblueprint.route("/project",methods=["POST"])
+@directorblueprint.route("/select_employee",methods=["POST"])
 def op_project():
     from sqlalchemy import exists
     try:

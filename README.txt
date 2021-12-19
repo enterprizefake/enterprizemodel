@@ -1,4 +1,4 @@
-#环境 install.txt
+#环境 install.txt 或者运行 install.bat
 pip install flask
 pip install flask-sqlalchemy
 pip install flask-sqlacodegen
@@ -34,3 +34,5 @@ git init的时候请 新建自己的分支
 app.register_blueprint(restapi, url_prefix='/webservice')#增加前缀 比如 /mytest变成 /webservice/mytest
 #12/6新增
 #models转化python dict 见utils.modelparser
+#code自动
+https://snippet-generator.app/?description=xxxblueprint&tabtrigger=xxxbl&snippet=&mode=vscode
