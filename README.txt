@@ -7,7 +7,7 @@ pip install flask_pymongo #11/21新增
 pip install flask-socketio #12/9新增
 pip install gevent-websocket
 pip install eventlet
-flask-sqlacodegen "mysql://enteam:123456@1.15.184.52:3306/flusktest"  --outfile "./database/models.py" --flask #生成数据库py文件 一定cd 到此文件夹后 不然位置是错的
+flask-sqlacodegen "mysql://enteam:123456@1.15.184.52:3306/flasktest1"  --outfile "./database/models.py" --flask #生成数据库py文件 一定cd 到此文件夹后 不然位置是错的
 
 或者运行 codegen.bat
 
