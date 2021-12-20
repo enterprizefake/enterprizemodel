@@ -5,17 +5,17 @@ from flask import jsonify
 from flask import request
 from sqlalchemy import and_
 from utils.modelparser import to_pythontime,SqlToDict;
-directorblueprint = Blueprint('director_blueprint', __name__)
+alldirectorblueprint = Blueprint('director_blueprint', __name__)
 #appblueprint注意改名xx..x(自定义)blueprint 不然大家都用appblueprint会造成重复导入
 from Starter import db
 
 # https://segmentfault.com/a/1190000022883552
 #数据库模型导入
-from database.models import User,Project,EmployeeProject,Employee,Client
+from database.models import User,Project,EmployeeProject,Employee,Client,Session
 
 
 
-@directorblueprint.route("/newproject",methods=["POST"])
+@alldirectorblueprint.route("/newproject",methods=["POST"])
 def newproject():
     try:
         state="yes"
@@ -69,7 +69,7 @@ def newproject():
         db.session.close()
 
 
-@directorblueprint.route("/allproject",methods=["POST"])
+@alldirectorblueprint.route("/allproject",methods=["POST"])
 def myproject():
     try:
         state="yes"
@@ -108,7 +108,7 @@ def myproject():
         
 
 
-@directorblueprint.route("/select_employee",methods=["POST"])
+@alldirectorblueprint.route("/select_employee",methods=["POST"])
 def op_project():
     from sqlalchemy import exists
     try:
@@ -154,7 +154,7 @@ def op_project():
         db.session.close()
 
 
-@directorblueprint.route("/search_client",methods=["POST"])
+@alldirectorblueprint.route("/search_client",methods=["POST"])
 def search_client():
     try:
         state="yes"

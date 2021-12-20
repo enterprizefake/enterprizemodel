@@ -4,14 +4,14 @@ from flask import jsonify
 from flask import request
 from utils import modelparser;
 from traceback import print_exc
-frontprint = Blueprint('front_blueprint', __name__)
+allfrontprint = Blueprint('front_blueprint', __name__)
 #appblueprint注意改名xx..x(自定义)blueprint 不然大家都用appblueprint会造成重复导入
 from Starter import db
 
 #数据库模型导入
-from database.models import Client,Employee,User
+from database.models import Client,Employee, Contact,User
 
-@frontprint.route("/newclient",methods=["POST"])
+@allfrontprint.route("/newclient",methods=["POST"])
 def newclient():
     try:
         state="yes"
@@ -40,7 +40,7 @@ def newclient():
     finally:
         db.session.close()
 
-@frontprint.route("/newemployee",methods=["POST"])
+@allfrontprint.route("/newemployee",methods=["POST"])
 def newemployee():
     try:
         state="yes"
@@ -56,6 +56,7 @@ def newemployee():
         # _eplee.department=json_["department"]
         # _eplee.employee_tele=json_["employee_tele"]
         # _eplee.employee_office=json_["employee_office"]
+
         
 
 
@@ -71,6 +72,17 @@ def newemployee():
         
         # db.session.add(_eplee)
         db.session.add(_usr)
+        db.session.flush()
+        
+        _session=Contact()
+        _session.toContactId=1
+        _session.employee_id=_usr.employee_id
+        db.session.add(_session)
+        
+        
+        
+        
+        
         db.session.commit()       
         return jsonify(
             {

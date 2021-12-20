@@ -40,8 +40,8 @@ socketio = SocketIO(app)
 #导入blueprint
 from template.template import appblueprint
 from router.file_module.file import fileblueprint
-from router.director.director import directorblueprint
-from router.front.front import frontprint
+from router.director.alldirector import alldirectorblueprint
+from router.front.allfront import allfrontprint
 from router.monitor.monitor import monitorblueprint 
 from router.all.all import allblueprint
 from router.llr.llr import llr
@@ -52,11 +52,11 @@ app.register_blueprint(appblueprint)
 app.register_blueprint(fileblueprint)
 app.register_blueprint(llr)
 
-# app.register_blueprint(directorblueprint,url_prefix="/director")
-# app.register_blueprint(frontprint,url_prefix="/front")
+# app.register_blueprint(alldirectorblueprint,url_prefix="/director")
+# app.register_blueprint(allfrontprint,url_prefix="/front")
 # app.register_blueprint(monitorblueprint,url_prefix="/moniterapi")
-app.register_blueprint(directorblueprint,url_prefix="/all")
-app.register_blueprint(frontprint,url_prefix="/all")
+app.register_blueprint(alldirectorblueprint,url_prefix="/all")
+app.register_blueprint(allfrontprint,url_prefix="/all")
 app.register_blueprint(monitorblueprint,url_prefix="/moniterapi")
 app.register_blueprint(allblueprint,url_prefix="/all")
 
