@@ -7,7 +7,6 @@ from flask import request
 clientblueprint=Blueprint('client_blueprint',__name__)
 from Starter import db
 #数据库模型导入
-from database.models import Json
 from database.models import Client
 @clientblueprint.route('/listAllClients')
 def ListAllClients():    #显示所有客户信息
