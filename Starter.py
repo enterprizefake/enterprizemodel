@@ -45,6 +45,7 @@ from router.front.allfront import allfrontprint
 from router.monitor.monitor import monitorblueprint 
 from router.all.all import allblueprint
 from router.llr.llr import llr
+from router.boss.boss import bossblueprint
 
 #--------------------------------------------
 #加载blueprint
@@ -58,7 +59,7 @@ app.register_blueprint(alldirectorblueprint,url_prefix="/all")
 app.register_blueprint(allfrontprint,url_prefix="/all")
 app.register_blueprint(monitorblueprint,url_prefix="/moniterapi")
 app.register_blueprint(allblueprint,url_prefix="/all")
-
+app.register_blueprint(bossblueprint,url_prefix="/boss")
 
 #___________________________________________
 
