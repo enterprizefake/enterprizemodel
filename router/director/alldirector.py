@@ -44,8 +44,8 @@ def newproject():
         
         db.session.flush()
         _emproj=EmployeeProject()
-        _emproj.employee_id=raw_json['employee_id']
-        _emproj.ep_function=raw_json['employee_function']
+        _emproj.employee_id=raw_json['my_id']
+        _emproj.ep_function=raw_json['my_office']
         _emproj.project_id=_proj.project_id
         print("projectid:",_emproj.project_id)
         
@@ -69,12 +69,12 @@ def newproject():
         db.session.close()
 
 
-@alldirectorblueprint.route("/allproject_old",methods=["POST"])
+@alldirectorblueprint.route("/allproject",methods=["POST"])
 def myproject():
     try:
         state="yes"
         json_= request.get_json()
-        employee_id=json_["employee_id"]
+        employee_id=json_["my_id"]
         
         
         #查看自己id相关的项目

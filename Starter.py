@@ -51,7 +51,6 @@ from router.llr.llr import llr
 app.register_blueprint(appblueprint)
 app.register_blueprint(fileblueprint)
 app.register_blueprint(llr)
-
 # app.register_blueprint(alldirectorblueprint,url_prefix="/director")
 # app.register_blueprint(allfrontprint,url_prefix="/front")
 app.register_blueprint(monitorblueprint,url_prefix="/moniterapi")

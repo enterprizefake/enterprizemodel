@@ -52,7 +52,7 @@ def delemployeeinproject():
 
 
 @allblueprint.route("/notes",methods=["POST"])
-def handle():
+def notes():
     try:
         state="yes"
         json_= request.get_json()
@@ -105,6 +105,40 @@ def project():
         return jsonify(
             {
                 "state":state
+            }
+        )
+    except Exception as e:
+        print(e)
+        return jsonify(
+            {
+                "state":"no",
+                "info":str(e)
+            }
+        )
+    finally:
+        db.session.close()
+
+@allblueprint.route("/project_client",methods=["POST"])
+def project_client():
+    try:
+        state="yes"
+        json_= request.get_json()
+        _project_id=json_["project_id"]
+        _project=db.session.query(Project).filter(Project.project_id==_project_id).first()
+        if _project==None:
+            raise Exception("no such project")
+        _client=db.session.query(Client).filter(Client.client_id==_project.client_id).first()
+        if _client==None:
+            raise Exception("no such client")
+        
+        
+        
+        return jsonify(
+            {
+                "state":state,
+                "client_name":_client.client_name,
+                "client_id":_client.client_id,
+                "value":[_client.client_first,_client.client_second,_client.client_third]
             }
         )
     except Exception as e:
