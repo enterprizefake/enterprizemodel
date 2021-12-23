@@ -182,14 +182,19 @@ def mlogout():
 from flask_socketio import Namespace
 class MonitorSocket(Namespace):
     def on_connect(self):
-        print("connection:",request.sid)
+        # print("connection:",request.sid)
+        self.emit("message",{"connection":"welcome!"})
         pass
     def on_disconnect(self):
-        print("disconnection")
+        print("disconnection:",request.sid)
+        self.disconnect(request.sid)
         pass
     def on_timer(self,data):
+        
         print("onheartbeat")
         
         pass
+    def on_clientmessage(self,data):
+        print("client message:",data)
     
     

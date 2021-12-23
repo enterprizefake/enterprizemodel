@@ -10,14 +10,12 @@ db = SQLAlchemy()
 class Client(db.Model):
     __tablename__ = 'client'
 
-    client_name = db.Column(db.String(20), primary_key=True, nullable=False)
-    client_first = db.Column(db.String(20))
-    client_second = db.Column(db.String(20))
-    client_third = db.Column(db.String(20))
-    client_tele = db.Column(db.String(20), primary_key=True, nullable=False)
-    project_id = db.Column(db.ForeignKey('project.project_id'), index=True)
-
-    project = db.relationship('Project', primaryjoin='Client.project_id == Project.project_id', backref='clients')
+    client_id = db.Column(db.Integer, primary_key=True)
+    client_name = db.Column(db.String(50, 'utf8mb4_bin'))
+    client_first = db.Column(db.String(50, 'utf8mb4_bin'))
+    client_second = db.Column(db.String(50, 'utf8mb4_bin'))
+    client_third = db.Column(db.String(50, 'utf8mb4_bin'))
+    client_tele = db.Column(db.String(50, 'utf8mb4_bin'))
 
 
 class Contact(db.Model):
@@ -25,7 +23,7 @@ class Contact(db.Model):
 
     toContactId = db.Column(db.ForeignKey('session.toContactId'), primary_key=True, nullable=False)
     employee_id = db.Column(db.ForeignKey('employee.employee_id'), primary_key=True, nullable=False, index=True)
-    avatar = db.Column(db.String(200))
+    empty = db.Column(db.Integer)
 
     employee = db.relationship('Employee', primaryjoin='Contact.employee_id == Employee.employee_id', backref='contacts')
     session = db.relationship('Session', primaryjoin='Contact.toContactId == Session.toContactId', backref='contacts')
@@ -34,22 +32,22 @@ class Contact(db.Model):
 class Employee(db.Model):
     __tablename__ = 'employee'
 
-    employee_id = db.Column(db.Integer, primary_key=True)
-    employee_name = db.Column(db.String(20), nullable=False)
+    employee_id = db.Column(db.String(50, 'utf8mb4_bin'), primary_key=True)
+    employee_name = db.Column(db.String(50, 'utf8mb4_bin'), nullable=False)
     employee_age = db.Column(db.Integer)
-    employee_office = db.Column(db.String(20), nullable=False)
-    employee_tele = db.Column(db.String(20))
+    employee_office = db.Column(db.String(50, 'utf8mb4_bin'), nullable=False)
+    employee_tele = db.Column(db.String(50, 'utf8mb4_bin'))
     employee_capability = db.Column(db.Integer)
     employee_workattitude = db.Column(db.Integer)
-    department = db.Column(db.String(20))
+    department = db.Column(db.String(50, 'utf8mb4_bin'))
+    avatar = db.Column(db.String(100, 'utf8mb4_bin'))
 
 
 class User(Employee):
     __tablename__ = 'user'
 
     employee_id = db.Column(db.ForeignKey('employee.employee_id'), primary_key=True)
-    username = db.Column(db.Integer, nullable=False)
-    password = db.Column(db.String(20), nullable=False)
+    password = db.Column(db.String(50, 'utf8mb4_bin'), nullable=False)
 
 
 class EmployeeOperate(db.Model):
@@ -57,8 +55,8 @@ class EmployeeOperate(db.Model):
 
     operate_id = db.Column(db.Integer, primary_key=True)
     employee_id = db.Column(db.ForeignKey('employee.employee_id'), index=True)
-    operate_date = db.Column(db.Date)
-    operate_what = db.Column(db.String(200))
+    operate_date = db.Column(db.String(30, 'utf8mb4_bin'))
+    operate_what = db.Column(db.String(200, 'utf8mb4_bin'))
 
     employee = db.relationship('Employee', primaryjoin='EmployeeOperate.employee_id == Employee.employee_id', backref='employee_operates')
 
@@ -66,10 +64,9 @@ class EmployeeOperate(db.Model):
 class EmployeeProject(db.Model):
     __tablename__ = 'employee_project'
 
-    project_id = db.Column(db.ForeignKey('project.project_id'), primary_key=True, nullable=False)
-    employee_id = db.Column(db.ForeignKey('employee.employee_id'), primary_key=True, nullable=False, index=True)
-    ep_function = db.Column(db.String(20), nullable=False)
-    ep_finish = db.Column(db.Integer)
+    employee_id = db.Column(db.ForeignKey('employee.employee_id'), primary_key=True, nullable=False)
+    project_id = db.Column(db.ForeignKey('project.project_id'), primary_key=True, nullable=False, index=True)
+    ep_office = db.Column(db.String(20, 'utf8mb4_bin'))
     evaluate = db.Column(db.Integer)
 
     employee = db.relationship('Employee', primaryjoin='EmployeeProject.employee_id == Employee.employee_id', backref='employee_projects')
@@ -80,20 +77,18 @@ class Message(db.Model):
     __tablename__ = 'message'
     __table_args__ = (
         db.ForeignKeyConstraint(['toContactId', 'employee_id'], ['contact.toContactId', 'contact.employee_id']),
-        db.Index('FK_14', 'toContactId', 'employee_id')
+        db.Index('FK_R14', 'toContactId', 'employee_id')
     )
 
     id = db.Column(db.Integer, primary_key=True)
     toContactId = db.Column(db.Integer)
-    employee_id = db.Column(db.Integer)
-    status = db.Column(db.String(20))
-    type = db.Column(db.String(20))
-    content = db.Column(db.Text)
+    employee_id = db.Column(db.String(50, 'utf8mb4_bin'))
+    status = db.Column(db.String(50, 'utf8mb4_bin'))
+    type = db.Column(db.String(50, 'utf8mb4_bin'))
+    content = db.Column(db.Text(collation='utf8mb4_bin'))
     sendTime = db.Column(db.BigInteger)
-    fileSize = db.Column(db.String(200))
-    fileName = db.Column(db.String(200))
-    user_name = db.Column(db.String(20))
-    avatar = db.Column(db.String(20))
+    fileSize = db.Column(db.String(200, 'utf8mb4_bin'))
+    fileName = db.Column(db.String(200, 'utf8mb4_bin'))
 
     contact = db.relationship('Contact', primaryjoin='and_(Message.toContactId == Contact.toContactId, Message.employee_id == Contact.employee_id)', backref='messages')
 
@@ -120,39 +115,42 @@ class Project(db.Model):
     __tablename__ = 'project'
 
     project_id = db.Column(db.Integer, primary_key=True)
-    project_name = db.Column(db.String(20), nullable=False)
+    client_id = db.Column(db.ForeignKey('client.client_id'), index=True)
+    project_name = db.Column(db.String(50, 'utf8mb4_bin'), nullable=False)
     project_begindate = db.Column(db.Date, nullable=False)
-    project_period = db.Column(db.String(20))
+    project_period = db.Column(db.String(50, 'utf8mb4_bin'))
     project_price = db.Column(db.Float)
     project_enddate = db.Column(db.Date)
-    project_periodstage = db.Column(db.String(20))
-    project_type = db.Column(db.String(20))
-    project_state = db.Column(db.String(20))
-    amendments = db.Column(db.Text)
+    project_periodstage = db.Column(db.String(50, 'utf8mb4_bin'))
+    project_type = db.Column(db.String(50))
+    project_state = db.Column(db.String(50, 'utf8mb4_bin'))
+    amendments = db.Column(db.Text(collation='utf8mb4_bin'))
+
+    client = db.relationship('Client', primaryjoin='Project.client_id == Client.client_id', backref='projects')
 
 
 class ProjectFile(db.Model):
     __tablename__ = 'project_file'
     __table_args__ = (
-        db.ForeignKeyConstraint(['project_id', 'employee_id'], ['employee_project.project_id', 'employee_project.employee_id']),
-        db.Index('FK_10', 'project_id', 'employee_id')
+        db.ForeignKeyConstraint(['employee_id', 'project_id'], ['employee_project.employee_id', 'employee_project.project_id']),
+        db.Index('FK_Relationship_10', 'employee_id', 'project_id')
     )
 
     projectfile_id = db.Column(db.Integer, primary_key=True)
+    employee_id = db.Column(db.String(50, 'utf8mb4_bin'))
     project_id = db.Column(db.Integer)
-    employee_id = db.Column(db.Integer)
-    projectfile_path = db.Column(db.String(100), nullable=False)
+    projectfile_path = db.Column(db.String(100, 'utf8mb4_bin'), nullable=False)
     projectfile_time = db.Column(db.Date, nullable=False)
 
-    project = db.relationship('EmployeeProject', primaryjoin='and_(ProjectFile.project_id == EmployeeProject.project_id, ProjectFile.employee_id == EmployeeProject.employee_id)', backref='project_files')
+    employee = db.relationship('EmployeeProject', primaryjoin='and_(ProjectFile.employee_id == EmployeeProject.employee_id, ProjectFile.project_id == EmployeeProject.project_id)', backref='project_files')
 
 
 class Session(db.Model):
     __tablename__ = 'session'
 
     toContactId = db.Column(db.Integer, primary_key=True)
-    avatar = db.Column(db.String(100))
-    displayName = db.Column(db.String(100))
+    avatar = db.Column(db.String(100, 'utf8mb4_bin'))
+    displayName = db.Column(db.String(100, 'utf8mb4_bin'))
     unread = db.Column(db.Integer)
     lastSendTime = db.Column(db.Integer)
-    lastContent = db.Column(db.Text)
+    lastContent = db.Column(db.Text(collation='utf8mb4_bin'))

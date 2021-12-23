@@ -2,7 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_cors import *
 from flask_pymongo import PyMongo,MongoClient
-from flask_socketio import SocketIO
+
 import traceback
 import logging
 
@@ -18,7 +18,7 @@ CORS(app,supports_credentials=True,max_age=36000)
 
 
 
-SQLALCHEMY_DATABASE_URI = '''mysql://enteam:123456@1.15.184.52:3306/flasktest1'''
+SQLALCHEMY_DATABASE_URI = '''mysql://enteam:123456@1.15.184.52:3306/flasktest'''
 MONGODB_URI="mongodb://superuser:superadmin@1.15.184.52:27017/test?authSource=admin"
 
 
@@ -35,7 +35,7 @@ app.config["JSON_AS_ASCII"] = False
 # mongo=PyMongo(app,uri=MONGODB_URI)
 mongo=MongoClient(MONGODB_URI)
 db=SQLAlchemy(app)
-socketio = SocketIO(app)
+
 
 #导入blueprint
 from template.template import appblueprint
@@ -54,7 +54,7 @@ app.register_blueprint(llr)
 
 # app.register_blueprint(alldirectorblueprint,url_prefix="/director")
 # app.register_blueprint(allfrontprint,url_prefix="/front")
-# app.register_blueprint(monitorblueprint,url_prefix="/moniterapi")
+app.register_blueprint(monitorblueprint,url_prefix="/moniterapi")
 app.register_blueprint(alldirectorblueprint,url_prefix="/all")
 app.register_blueprint(allfrontprint,url_prefix="/all")
 app.register_blueprint(monitorblueprint,url_prefix="/moniterapi")
@@ -64,9 +64,20 @@ app.register_blueprint(allblueprint,url_prefix="/all")
 #___________________________________________
 
 #导入socket
-from flask_socketio import Namespace
+# from flask_socketio import Namespace
 from router.monitor.monitor import MonitorSocket
+from flask_socketio import SocketIO
+# from socketio import AsyncServer
+# from aiohttp import web
+socketio = SocketIO(app,ping_interval=25)
 socketio.on_namespace(MonitorSocket("/monsocket"))
+
+# appsock = web.Application()
+# socket_=AsyncServer()
+# socket_.register_namespace(MonitorSocket("/monsocket"))
+# socket_.attach(appsock)
+# socket_.
+
 
 #_______________________________________________
 

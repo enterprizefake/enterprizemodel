@@ -61,7 +61,7 @@ def newemployee():
 
 
         _usr=User()
-        
+        _usr.employee_id=json_["employee_id"]
         _usr.employee_name=json_["employee_name"]
         _usr.employee_age=json_["employee_age"]
         _usr.department=json_["department"]

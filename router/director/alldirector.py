@@ -69,7 +69,7 @@ def newproject():
         db.session.close()
 
 
-@alldirectorblueprint.route("/allproject",methods=["POST"])
+@alldirectorblueprint.route("/allproject_old",methods=["POST"])
 def myproject():
     try:
         state="yes"
@@ -189,25 +189,5 @@ def search_client():
     finally:
         print("finallly")
         db.session.close()   
-    # try:
-    #     state="yes"
-    #     json_= request.get_json()
-  
 
-    #     db.session.commit()
-    #     return jsonify(
-    #         {
-    #             "state":state
-    #         }
-    #     )
-    # except Exception as e:
-    #     print(e)
-    #     return jsonify(
-    #         {
-    #             "state":"no",
-    #             "info":str(e)
-    #         }
-    #     )
-    # finally:
-    #     print("finallly")
-    #     db.session.close()
+
