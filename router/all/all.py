@@ -2,7 +2,6 @@ from flask import Blueprint
 from flask import jsonify
 from flask import request
 from sqlalchemy import and_
-from sympy import Add
 from utils.modelparser import to_pythontime,SqlToDict;
 allblueprint = Blueprint('all_blueprint', __name__)
 #appblueprint注意改名xx..x(自定义)blueprint 不然大家都用appblueprint会造成重复导入
