@@ -59,7 +59,8 @@ def DeleteEmployee():    #删除员工
         my_name = request.get_json()['my_name']  # 操作人的姓名
         my_id = request.get_json()['my_id']
         user = db.session.query(User).filter_by(employee_id=employee_id).first()
-        what = my_office + my_name + '解雇了'+user.employee_office+user.employee_name  # 记录操作日志
+        employee=db.session.query(Employee).filter_by(employee_id=employee_id).first()
+        what = my_office + my_name + '解雇了'+employee.employee_office+employee.employee_name  # 记录操作日志
         operate = EmployeeOperate(employee_id=my_id, operate_date=now_time,operate_what=what)
         db.session.add(operate)
         contacts=db.session.query(Contact).filter_by(employee_id=employee_id).all()
