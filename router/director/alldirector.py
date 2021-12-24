@@ -117,19 +117,19 @@ def op_project():
         project_id=json_["project_id"]
         
         _epee_in=db.session.query(Employee,EmployeeProject)\
-        .filter(Employee.employee_id==EmployeeProject.employee_id)\
-        .filter(EmployeeProject.project_id==int(project_id))\
+        .filter(EmployeeProject.project_id==project_id)\
         .all()
-        _epee_out=db.session.query(Employee)\
-        .filter(~exists().where(and_(Employee.employee_id==EmployeeProject.employee_id,EmployeeProject.project_id==int(project_id))))\
+        print("run 112")
+        _epee_out=db.session.query(Employee,EmployeeProject)\
+        .filter(~exists().where(and_(EmployeeProject.project_id==int(project_id))))\
         .all()
 
         sl_epee=[]
         avai_epee=[]
         for t in _epee_in:
-            sl_epee.append(SqlToDict(t[0],True).to_dict())
+            sl_epee.append({**SqlToDict(t[0],True).to_dict(),**SqlToDict(t[1],True).to_dict()})
         for t in _epee_out:
-            avai_epee.append(SqlToDict(t,True).to_dict())
+            avai_epee.append({**SqlToDict(t[0],True).to_dict(),**SqlToDict(t[1],True).to_dict()})
             
         
 

@@ -1,3 +1,5 @@
+# Gitee地址
+https://gitee.com/fanyujie/enterprizemodel    
 # 环境配置 install.txt 
 **或者运行 install.bat**  
 pip install flask  
