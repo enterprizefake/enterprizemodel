@@ -94,13 +94,19 @@ def myproject():
         state="yes"
         json_= request.get_json()
         employee_id=json_["my_id"]
+        em_office=json_["my_office"]
+        if em_office=='老板':
+            _projects=db.session.query(Project,EmployeeProject)\
+            .filter(Project.project_id==EmployeeProject.project_id)\
+            .all()
         
+        else:
         
         #查看自己id相关的项目
-        _projects=db.session.query(Project,EmployeeProject)\
-        .filter(Project.project_id==EmployeeProject.project_id)\
-        .filter(EmployeeProject.employee_id==int(employee_id))\
-        .all()
+            _projects=db.session.query(Project,EmployeeProject)\
+            .filter(Project.project_id==EmployeeProject.project_id)\
+            .filter(EmployeeProject.employee_id==int(employee_id))\
+            .all()
         
         ret_=[]
         for t in _projects:
