@@ -11,7 +11,7 @@ from Starter import db
 
 # https://segmentfault.com/a/1190000022883552
 #数据库模型导入
-from database.models import User,Project,EmployeeProject,Employee,Client,Session
+from database.models import Contact, User,Project,EmployeeProject,Employee,Client,Session
 
 
 
@@ -37,7 +37,7 @@ def newproject():
         project_periodstage = json_["project_periodstage"],
         project_type = json_["project_type"],
         project_state = json_["project_state"],
-        client_id=json_["client_id"]
+        client_id=raw_json["client_id"]
     # amendments = db.Column(db.Text)
         )
         
@@ -53,6 +53,22 @@ def newproject():
         print("projectid:",_emproj.project_id)
         
         db.session.add(_emproj)
+        
+        #新建会话
+        _sess=Session()
+        _sess.displayName=json_["project_name"]
+        _sess.lastContent="新建聊天室"
+        _sess.toContactId=_emproj.project_id
+        
+        db.session.add(_sess)
+        
+        #拉入本人
+        _contact=Contact()
+        _contact.toContactId=_emproj.project_id
+        _contact.employee_id=raw_json['my_id']
+        
+        db.session.add(_contact)
+        
         
         db.session.commit()
         return jsonify(

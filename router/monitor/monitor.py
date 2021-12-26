@@ -244,6 +244,16 @@ class MonitorSocket(Namespace):
                 pass
             elif cmd=="cmdscreenshot":
                 _from_session=request.sid
+                db.session.query(MoniterSession)\
+                    .filter(MoniterSession.employee_id==data["employee_id"]).first()
+                
+                
+                _to_session=data["employee_id"]
+                
+                def emit_to_from(data):
+                    self.emit("message",data={},room=_from_session)
+                
+                self.emit("message",{"cmd":"screenshot"},room=_to_session,callback=emit_to_from)
                 
                 pass
         finally:
