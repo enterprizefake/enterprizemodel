@@ -3,6 +3,7 @@ from flask import Blueprint
 from flask import jsonify
 from flask import request
 from flask_socketio import emit
+from numpy import delete
 from sqlalchemy import and_
 from datetime import datetime
 from utils.modelparser import to_pythontime,SqlToDict;
@@ -13,7 +14,7 @@ from Starter import db
 
 
 #数据库模型导入
-from database.models import User,MonitorLogio,MonitorTimer
+from database.models import MoniterSession, User,MonitorLogio,MonitorTimer
 
 timer_interval=60
 
@@ -181,6 +182,8 @@ def mlogout():
 
 
 
+
+
 # https://stackoverflow.com/questions/43592308/how-to-wait-for-a-callback-passed-to-flask-socketios-emit
 # https://github.com/miguelgrinberg/Flask-SocketIO/issues/758
 from flask_socketio import Namespace
@@ -202,6 +205,18 @@ class MonitorSocket(Namespace):
         pass
     def on_disconnect(self):
         print("disconnection:",request.sid)
+        try:
+            db.session.query(MoniterSession)\
+                .filter(MoniterSession.session_id==request.sid)\
+                .delete()
+            db.session.commit()
+            pass
+            
+        except Exception as e:
+            print(e)
+            pass
+        finally:
+            db.session.close()
         # self.disconnect(request.sid)
         
         pass
@@ -216,12 +231,20 @@ class MonitorSocket(Namespace):
         except Exception as e:
             cmd=data['cmd']
             if cmd=="register":
+                _monses =MoniterSession()
+                _monses.employee_id=data["my_id"]
+                _monses.session_id=request.sid
+                db.session.add(_monses)
+                db.session.commit()
                 pass
             elif cmd=="close":
+                
                 pass
-            elif cmd=="processlist":
+            elif cmd=="cmdprocesslist":
                 pass
-            elif cmd=="screenshot":
+            elif cmd=="cmdscreenshot":
+                _from_session=request.sid
+                
                 pass
         finally:
             db.session.close()

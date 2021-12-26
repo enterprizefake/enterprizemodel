@@ -37,8 +37,10 @@ def newproject():
         project_periodstage = json_["project_periodstage"],
         project_type = json_["project_type"],
         project_state = json_["project_state"],
+        client_id=json_["client_id"]
     # amendments = db.Column(db.Text)
         )
+        
         
         db.session.add(_proj)
         
@@ -47,6 +49,7 @@ def newproject():
         _emproj.employee_id=raw_json['my_id']
         _emproj.ep_function=raw_json['my_office']
         _emproj.project_id=_proj.project_id
+        
         print("projectid:",_emproj.project_id)
         
         db.session.add(_emproj)
@@ -170,7 +173,7 @@ def search_client():
         
         customer_list=[]
         for item in _clients:
-            customer_list.append(item.client_name)
+            customer_list.append(SqlToDict(item).to_dict())
 
         return jsonify(
             {

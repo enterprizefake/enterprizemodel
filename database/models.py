@@ -40,7 +40,7 @@ class Employee(db.Model):
     employee_capability = db.Column(db.Integer)
     employee_workattitude = db.Column(db.Integer)
     department = db.Column(db.String(50, 'utf8mb4_bin'))
-    avatar = db.Column(db.String(100, 'utf8mb4_bin'))
+    avatar = db.Column(db.Text(collation='utf8mb4_croatian_ci'))
 
 
 class User(Employee):
@@ -93,6 +93,25 @@ class Message(db.Model):
     contact = db.relationship('Contact', primaryjoin='and_(Message.toContactId == Contact.toContactId, Message.employee_id == Contact.employee_id)', backref='messages')
 
 
+class MoniterImage(db.Model):
+    __tablename__ = 'moniter_image'
+
+    employee_id = db.Column(db.ForeignKey('employee.employee_id'), nullable=False, index=True)
+    src_id = db.Column(db.Integer, primary_key=True)
+    src_address = db.Column(db.String(90, 'utf8mb4_bin'))
+
+    employee = db.relationship('Employee', primaryjoin='MoniterImage.employee_id == Employee.employee_id', backref='moniter_images')
+
+
+class MoniterSession(db.Model):
+    __tablename__ = 'moniter_session'
+
+    session_id = db.Column(db.String(64, 'utf8mb4_bin'), primary_key=True)
+    employee_id = db.Column(db.ForeignKey('employee.employee_id'), index=True)
+
+    employee = db.relationship('Employee', primaryjoin='MoniterSession.employee_id == Employee.employee_id', backref='moniter_sessions')
+
+
 class MonitorLogio(db.Model):
     __tablename__ = 'monitor_logio'
 
@@ -136,10 +155,10 @@ class ProjectFile(db.Model):
         db.Index('FK_Relationship_10', 'employee_id', 'project_id')
     )
 
-    projectfile_id = db.Column(db.Integer, primary_key=True)
+    projectfile_id = db.Column(db.String(64, 'utf8mb4_bin'), primary_key=True)
     employee_id = db.Column(db.String(50, 'utf8mb4_bin'))
     project_id = db.Column(db.Integer)
-    projectfile_path = db.Column(db.String(100, 'utf8mb4_bin'), nullable=False)
+    projectfile_path = db.Column(db.String(100, 'utf8mb4_bin'))
     projectfile_time = db.Column(db.Date, nullable=False)
 
     employee = db.relationship('EmployeeProject', primaryjoin='and_(ProjectFile.employee_id == EmployeeProject.employee_id, ProjectFile.project_id == EmployeeProject.project_id)', backref='project_files')
@@ -149,7 +168,7 @@ class Session(db.Model):
     __tablename__ = 'session'
 
     toContactId = db.Column(db.Integer, primary_key=True)
-    avatar = db.Column(db.String(100, 'utf8mb4_bin'))
+    avatar = db.Column(db.Text(collation='utf8mb4_bin'))
     displayName = db.Column(db.String(100, 'utf8mb4_bin'))
     unread = db.Column(db.Integer)
     lastSendTime = db.Column(db.Integer)
