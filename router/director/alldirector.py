@@ -47,7 +47,7 @@ def newproject():
         db.session.flush()
         _emproj=EmployeeProject()
         _emproj.employee_id=raw_json['my_id']
-        _emproj.ep_function=raw_json['my_office']
+        _emproj.ep_office=raw_json['my_office']
         _emproj.project_id=_proj.project_id
         
         print("projectid:",_emproj.project_id)

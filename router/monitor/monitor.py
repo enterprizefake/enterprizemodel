@@ -3,7 +3,7 @@ from flask import Blueprint
 from flask import jsonify
 from flask import request
 from flask_socketio import emit
-from numpy import delete
+
 from sqlalchemy import and_
 from datetime import datetime
 from utils.modelparser import to_pythontime,SqlToDict;
@@ -14,7 +14,7 @@ from Starter import db
 
 
 #数据库模型导入
-from database.models import MoniterSession, User,MonitorLogio,MonitorTimer
+from database.models import MoniterImage, MoniterSession, Session, User,MonitorLogio,MonitorTimer
 
 timer_interval=60
 
@@ -227,8 +227,6 @@ class MonitorSocket(Namespace):
         pass
     def on_clientmessage(self,data):
         try:
-            pass
-        except Exception as e:
             cmd=data['cmd']
             if cmd=="register":
                 _monses =MoniterSession()
@@ -244,18 +242,28 @@ class MonitorSocket(Namespace):
                 pass
             elif cmd=="cmdscreenshot":
                 _from_session=request.sid
-                db.session.query(MoniterSession)\
+                _session=db.session.query(MoniterSession)\
                     .filter(MoniterSession.employee_id==data["employee_id"]).first()
+                if _session==None:
+                    raise Exception("no such MoniterSession:"+request.sid)
                 
-                
-                _to_session=data["employee_id"]
+                _to_session=_session.session_id;
                 
                 def emit_to_from(data):
-                    self.emit("message",data={},room=_from_session)
+                    _monimg=MoniterImage()
+                    _monimg.employee_id=data["my_id"]
+                    _monimg.src_address=data["src_address"]
+                    _monimg.date=datetime.now()
+                    db.session.add(_monimg)
+                    db.session.commit()
+                    self.emit("message",data=data,room=_from_session)
                 
                 self.emit("message",{"cmd":"screenshot"},room=_to_session,callback=emit_to_from)
                 
                 pass
+            pass
+        except Exception as e:
+            print(e)
         finally:
             db.session.close()
             

@@ -99,6 +99,7 @@ class MoniterImage(db.Model):
     employee_id = db.Column(db.ForeignKey('employee.employee_id'), nullable=False, index=True)
     src_id = db.Column(db.Integer, primary_key=True)
     src_address = db.Column(db.String(90, 'utf8mb4_bin'))
+    date = db.Column(db.DateTime)
 
     employee = db.relationship('Employee', primaryjoin='MoniterImage.employee_id == Employee.employee_id', backref='moniter_images')
 
@@ -106,8 +107,8 @@ class MoniterImage(db.Model):
 class MoniterSession(db.Model):
     __tablename__ = 'moniter_session'
 
-    session_id = db.Column(db.String(64, 'utf8mb4_bin'), primary_key=True)
-    employee_id = db.Column(db.ForeignKey('employee.employee_id'), index=True)
+    session_id = db.Column(db.String(64, 'utf8mb4_bin'), primary_key=True, nullable=False)
+    employee_id = db.Column(db.ForeignKey('employee.employee_id'), primary_key=True, nullable=False, index=True)
 
     employee = db.relationship('Employee', primaryjoin='MoniterSession.employee_id == Employee.employee_id', backref='moniter_sessions')
 
