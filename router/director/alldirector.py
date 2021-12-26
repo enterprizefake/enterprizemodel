@@ -45,14 +45,14 @@ def newproject():
         db.session.add(_proj)
         
         db.session.flush()
-        _emproj=EmployeeProject()
-        _emproj.employee_id=raw_json['my_id']
-        _emproj.ep_office=raw_json['my_office']
-        _emproj.project_id=_proj.project_id
-        
-        print("projectid:",_emproj.project_id)
-        
-        db.session.add(_emproj)
+        if raw_json['my_office']!="老板":
+            _emproj=EmployeeProject()
+            _emproj.employee_id=raw_json['my_id']
+            _emproj.ep_office=raw_json['my_office']
+            _emproj.project_id=_proj.project_id
+            
+            print("projectid:",_emproj.project_id)
+            db.session.add(_emproj)
         
         #新建会话
         _sess=Session()

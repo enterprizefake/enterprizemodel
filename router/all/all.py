@@ -86,6 +86,16 @@ def project():
         
         _project_id=_project["project_id"]
         
+        #修改project 的 clientid
+        db.session.query(Project)\
+            .filter(Project.project_id==_project_id)\
+            .update({
+                Project.client_id:_client_id
+            })
+        
+        
+        
+        
         for delitem in _del_emps:
             db.session.query(EmployeeProject)\
             .filter(EmployeeProject.employee_id==delitem,EmployeeProject.project_id==_project_id).delete()

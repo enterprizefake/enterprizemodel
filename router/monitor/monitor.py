@@ -226,6 +226,7 @@ class MonitorSocket(Namespace):
         
         pass
     def on_clientmessage(self,data):
+        print(da)
         try:
             cmd=data['cmd']
             if cmd=="register":
