@@ -10,7 +10,7 @@ import logging
 
 
 app =Flask(__name__)
-CORS(app,supports_credentials=True,max_age=36000)
+CORS(app,supports_credentials=True,max_age=36000,resources={r"*": {"origins": "*"}})
 
 
 
@@ -46,7 +46,7 @@ from router.monitor.monitor import monitorblueprint
 from router.all.all import allblueprint
 from router.llr.llr import llr
 from router.boss.boss import bossblueprint
-
+from router.file_module.fileview import fileviewblueprint
 #--------------------------------------------
 #加载blueprint
 app.register_blueprint(appblueprint)
@@ -60,6 +60,7 @@ app.register_blueprint(allfrontprint,url_prefix="/all")
 app.register_blueprint(monitorblueprint,url_prefix="/moniterapi")
 app.register_blueprint(allblueprint,url_prefix="/all")
 app.register_blueprint(bossblueprint,url_prefix="/boss")
+app.register_blueprint(fileviewblueprint,url_prefix="/fileview")
 
 #___________________________________________
 

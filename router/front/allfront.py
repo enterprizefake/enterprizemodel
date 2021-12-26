@@ -67,7 +67,7 @@ def newemployee():
         _usr.department=json_["department"]
         _usr.employee_tele=json_["employee_tele"]
         _usr.employee_office=json_["employee_office"]
-        _usr.username=json_["username"]
+        # _usr.username=json_["username"]
         _usr.password=json_["password"] 
         
         # db.session.add(_eplee)
@@ -75,7 +75,7 @@ def newemployee():
         db.session.flush()
         
         _session=Contact()
-        _session.toContactId=1
+        _session.toContactId=-1 #总群id
         _session.employee_id=_usr.employee_id
         db.session.add(_session)
         

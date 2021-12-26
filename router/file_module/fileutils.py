@@ -112,8 +112,4 @@ def updatetoMongo(mongo:MongoClient,id:str,file_:FileStorage):
 
 
 
-
-
-
-
     

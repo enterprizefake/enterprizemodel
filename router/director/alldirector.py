@@ -117,10 +117,12 @@ def op_project():
         project_id=json_["project_id"]
         
         _epee_in=db.session.query(Employee,EmployeeProject)\
+        .filter(Employee.employee_id==EmployeeProject.employee_id)\
         .filter(EmployeeProject.project_id==project_id)\
         .all()
         print("run 112")
         _epee_out=db.session.query(Employee,EmployeeProject)\
+        .filter(Employee.employee_id==EmployeeProject.employee_id)\
         .filter(~exists().where(and_(EmployeeProject.project_id==int(project_id))))\
         .all()
 

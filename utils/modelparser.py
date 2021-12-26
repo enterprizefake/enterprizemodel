@@ -23,4 +23,11 @@ class SqlToDict:
 
 def to_pythontime(str_):
     return datetime.strptime(str_, '%Y-%m-%d %H:%M:%S')
+
+def tuple_merge_todict(tuple_):
+        tuple_=list(tuple_)
+        d={}
+        for item in tuple_:
+                d.update(SqlToDict(item,True).to_dict())
+        return d
     

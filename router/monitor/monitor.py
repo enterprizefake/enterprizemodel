@@ -2,6 +2,7 @@
 from flask import Blueprint
 from flask import jsonify
 from flask import request
+from flask_socketio import emit
 from sqlalchemy import and_
 from datetime import datetime
 from utils.modelparser import to_pythontime,SqlToDict;
@@ -127,6 +128,7 @@ def mlogout():
         
         state="success"
         json_= request.get_json()
+        
         userid=int(json_["userid"])
         currenttime=to_pythontime(json_["currenttime"])
         begintime=to_pythontime(json_["begintime"])
@@ -178,16 +180,30 @@ def mlogout():
 
 
 
+
+# https://stackoverflow.com/questions/43592308/how-to-wait-for-a-callback-passed-to-flask-socketios-emit
 # https://github.com/miguelgrinberg/Flask-SocketIO/issues/758
 from flask_socketio import Namespace
+
+
+
 class MonitorSocket(Namespace):
     def on_connect(self):
         # print("connection:",request.sid)
         self.emit("message",{"connection":"welcome!"})
+        
+        try:
+            pass
+        except Exception as e:
+            print(e)
+            # db.session.add()
+        finally:
+            db.session.close()
         pass
     def on_disconnect(self):
         print("disconnection:",request.sid)
-        self.disconnect(request.sid)
+        # self.disconnect(request.sid)
+        
         pass
     def on_timer(self,data):
         
@@ -195,6 +211,20 @@ class MonitorSocket(Namespace):
         
         pass
     def on_clientmessage(self,data):
-        print("client message:",data)
+        try:
+            pass
+        except Exception as e:
+            cmd=data['cmd']
+            if cmd=="register":
+                pass
+            elif cmd=="close":
+                pass
+            elif cmd=="processlist":
+                pass
+            elif cmd=="screenshot":
+                pass
+        finally:
+            db.session.close()
+            
     
     

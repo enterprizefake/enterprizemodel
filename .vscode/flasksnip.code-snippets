@@ -41,5 +41,22 @@
 		  "        db.session.close()"
 		],
 		"description": "xxxblueprint"
+	  },
+	  "xxxtemplate": {
+		"prefix": "xxxtpl",
+		"body": [
+		  "from flask import Blueprint",
+		  "from flask import jsonify",
+		  "from flask import request",
+		  "from utils import modelparser;",
+		  "appblueprint = Blueprint('_blueprint', __name__)",
+		  "#appblueprint注意改名xx..x(自定义)blueprint 不然大家都用appblueprint会造成重复导入",
+		  "from Starter import db",
+		  "",
+		  "#数据库模型导入",
+		  "from database.models import User"
+		],
+		"description": "xxxtemplate"
 	  }
+	
 }
