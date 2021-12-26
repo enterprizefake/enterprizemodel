@@ -148,9 +148,10 @@ def op_project():
         _epee_out_raw=db.session.query(Employee)\
         .all()
         
+        _epee_in_ids=[item[0].employee_id for item in _epee_in]
         _epee_out=[]
         for item in _epee_out_raw:
-            if item.employee_id not in _epee_in:
+            if item.employee_id not in _epee_in_ids:
                 _epee_out.append(item)
             
 

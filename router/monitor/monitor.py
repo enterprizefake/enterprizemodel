@@ -192,8 +192,8 @@ from flask_socketio import Namespace
 
 class MonitorSocket(Namespace):
     def on_connect(self):
-        # print("connection:",request.sid)
-        self.emit("message",{"connection":"welcome!"})
+        print("connection:",request.sid)
+        # self.emit("message",{"connection":"welcome!"})
         
         try:
             pass
@@ -226,7 +226,7 @@ class MonitorSocket(Namespace):
         
         pass
     def on_clientmessage(self,data):
-        print(da)
+        print(data)
         try:
             cmd=data['cmd']
             if cmd=="register":

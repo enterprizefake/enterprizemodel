@@ -70,7 +70,7 @@ from router.monitor.monitor import MonitorSocket
 from flask_socketio import SocketIO
 # from socketio import AsyncServer
 # from aiohttp import web
-socketio = SocketIO(app,ping_interval=25)
+socketio = SocketIO(app,ping_interval=25,cors_allowed_origins="*")
 socketio.on_namespace(MonitorSocket("/monsocket"))
 
 # appsock = web.Application()
