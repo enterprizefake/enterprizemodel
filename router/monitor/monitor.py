@@ -257,6 +257,7 @@ class MonitorSocket(Namespace):
                     _monimg.date=datetime.now()
                     db.session.add(_monimg)
                     db.session.commit()
+                    data["cmd"]="returnscreenshot"
                     self.emit("message",data=data,room=_from_session)
                 
                 self.emit("message",{"cmd":"screenshot"},room=_to_session,callback=emit_to_from)
@@ -264,6 +265,7 @@ class MonitorSocket(Namespace):
                 pass
             pass
         except Exception as e:
+            self.emit("message",{"cmd":"error","info":str(e)})
             print(e)
         finally:
             db.session.close()

@@ -1,3 +1,4 @@
+from turtle import update
 from flask import Blueprint
 from flask import jsonify
 from flask import request
@@ -93,7 +94,16 @@ def project():
                 Project.client_id:_client_id
             })
         
-        
+        #更新评价:
+        _selected_employee=json_["selected_employee"]
+        for item in _selected_employee:
+            db.session.query(EmployeeProject)\
+            .filter(EmployeeProject.employee_id==item.employee_id,EmployeeProject.project_id==_project_id)\
+            .update(
+                {
+                    EmployeeProject.evaluate:item.evaluate
+                }
+            )
         
         
         for delitem in _del_emps:
