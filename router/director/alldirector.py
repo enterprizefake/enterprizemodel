@@ -54,20 +54,20 @@ def newproject():
             print("projectid:",_emproj.project_id)
             db.session.add(_emproj)
         
-            #新建会话
-            _sess=Session()
-            _sess.displayName=json_["project_name"]
-            _sess.lastContent="新建聊天室"
-            _sess.toContactId=_emproj.project_id
-            
-            db.session.add(_sess)
-            
-            #拉入本人
-            _contact=Contact()
-            _contact.toContactId=_emproj.project_id
-            _contact.employee_id=raw_json['my_id']
-            
-            db.session.add(_contact)
+        #新建会话
+        _sess=Session()
+        _sess.displayName=json_["project_name"]
+        _sess.lastContent="新建聊天室"
+        _sess.toContactId=_proj.project_id
+        
+        db.session.add(_sess)
+        
+        #拉入本人
+        _contact=Contact()
+        _contact.toContactId=_proj.project_id
+        _contact.employee_id=raw_json['my_id']
+        
+        db.session.add(_contact)
         
         
         db.session.commit()
@@ -101,7 +101,6 @@ def myproject():
             .all()
         
         else:
-        
         #查看自己id相关的项目
             _projects=db.session.query(Project,EmployeeProject)\
             .filter(Project.project_id==EmployeeProject.project_id)\
@@ -146,17 +145,21 @@ def op_project():
         .filter(EmployeeProject.project_id==project_id)\
         .all()
         print("run 112")
-        _epee_out=db.session.query(Employee,EmployeeProject)\
-        .filter(Employee.employee_id==EmployeeProject.employee_id)\
-        .filter(~exists().where(and_(EmployeeProject.project_id==int(project_id))))\
+        _epee_out_raw=db.session.query(Employee)\
         .all()
+        
+        _epee_out=[]
+        for item in _epee_out_raw:
+            if item.employee_id not in _epee_in:
+                _epee_out.append(item)
+            
 
         sl_epee=[]
         avai_epee=[]
         for t in _epee_in:
             sl_epee.append({**SqlToDict(t[0],True).to_dict(),**SqlToDict(t[1],True).to_dict()})
         for t in _epee_out:
-            avai_epee.append({**SqlToDict(t[0],True).to_dict(),**SqlToDict(t[1],True).to_dict()})
+            avai_epee.append({**SqlToDict(t,True).to_dict()})
             
         
 

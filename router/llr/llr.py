@@ -1,11 +1,9 @@
 from database.models import *
 from os import *
-import re
-from flask.scaffold import F
+
 # from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, json, request, jsonify, Blueprint
 from flask_cors import *
-from sqlalchemy.orm import session
 from router.llr.dict import *
 import datetime
 SQLALCHEMY_DATABASE_URI = '''mysql://enteam:123456@1.15.184.52:3306/flasktest'''
