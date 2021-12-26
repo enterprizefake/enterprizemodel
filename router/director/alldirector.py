@@ -96,8 +96,8 @@ def myproject():
         employee_id=json_["my_id"]
         em_office=json_["my_office"]
         if em_office=='老板':
-            _projects=db.session.query(Project,EmployeeProject)\
-            .filter(Project.project_id==EmployeeProject.project_id)\
+            _projects=db.session.query(Project,Project)\
+            .filter(Project.project_id==Project.project_id)\
             .all()
         
         else:
