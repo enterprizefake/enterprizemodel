@@ -54,20 +54,20 @@ def newproject():
             print("projectid:",_emproj.project_id)
             db.session.add(_emproj)
         
-        #新建会话
-        _sess=Session()
-        _sess.displayName=json_["project_name"]
-        _sess.lastContent="新建聊天室"
-        _sess.toContactId=_emproj.project_id
-        
-        db.session.add(_sess)
-        
-        #拉入本人
-        _contact=Contact()
-        _contact.toContactId=_emproj.project_id
-        _contact.employee_id=raw_json['my_id']
-        
-        db.session.add(_contact)
+            #新建会话
+            _sess=Session()
+            _sess.displayName=json_["project_name"]
+            _sess.lastContent="新建聊天室"
+            _sess.toContactId=_emproj.project_id
+            
+            db.session.add(_sess)
+            
+            #拉入本人
+            _contact=Contact()
+            _contact.toContactId=_emproj.project_id
+            _contact.employee_id=raw_json['my_id']
+            
+            db.session.add(_contact)
         
         
         db.session.commit()

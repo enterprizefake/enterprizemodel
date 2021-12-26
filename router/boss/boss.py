@@ -8,7 +8,7 @@ from flask import request
 bossblueprint=Blueprint('boss_blueprint',__name__)
 from Starter import db
 #数据库模型导入
-from database.models import Employee,User,Client,EmployeeOperate,Contact,Project,Session
+from database.models import *
 
 @bossblueprint.route('/allemployee',methods=["POST"])
 def ListallEmployee():    #显示所有员工信息
@@ -245,6 +245,10 @@ def DelProject():    #删除项目
         my_office = json_['my_office']  # 操作人的职务
         my_name = json_['my_name']  # 操作人的姓名
         my_id = json_['my_id']
+        eps=db.session.query(EmployeeProject).filter_by(project_id=json_['project_id']).all()
+        if eps!=[]:
+            for ep in eps:
+                db.session.delete(ep) 
         project=db.session.query(Project).filter_by(project_id=json_['project_id']).first()     #查询要删除的项目
         what = my_office + my_name + '删除了项目' + project.project_name
         operate = EmployeeOperate(employee_id=my_id, operate_date=now_time, operate_what=what)
