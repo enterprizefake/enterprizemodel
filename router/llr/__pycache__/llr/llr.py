@@ -111,6 +111,7 @@ def addmessage():
         mess = Message(toContactId=js['id'], content=js['content'], 
         employee_id=js['employee_id'], sendTime=js['time'], 
         type=js['type'])
+        print(mess)
         db.session.add(mess)
         nowsession = db.session.query(Session).filter(
             Session.toContactId == js['id'])[0]
