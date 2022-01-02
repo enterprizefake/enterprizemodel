@@ -47,6 +47,7 @@ from router.all.all import allblueprint
 from router.llr.llr import llr
 from router.boss.boss import bossblueprint
 from router.file_module.fileview import fileviewblueprint
+from router.form.form import formblueprint
 #--------------------------------------------
 #加载blueprint
 app.register_blueprint(appblueprint)
@@ -61,6 +62,8 @@ app.register_blueprint(monitorblueprint,url_prefix="/moniterapi")
 app.register_blueprint(allblueprint,url_prefix="/all")
 app.register_blueprint(bossblueprint,url_prefix="/boss")
 app.register_blueprint(fileviewblueprint,url_prefix="/fileview")
+app.register_blueprint(formblueprint,url_prefix="/form")
+
 
 #___________________________________________
 

@@ -14,7 +14,7 @@ from Starter import db
 
 
 #数据库模型导入
-from database.models import MoniterImage, MoniterSession, Session, User,MonitorLogio,MonitorTimer
+from database.models import Employee, MoniterImage, MoniterSession, Session, User,MonitorLogio,MonitorTimer
 
 timer_interval=60
 
@@ -46,14 +46,14 @@ def mlogin():
         from sqlalchemy import exists
         state="success"
         json_= request.get_json()
-        username=json_["user"]
+        username=json_["user_id"]
         password=json_["password"]
-        currenttime=to_pythontime(json_["currenttime"])
+        currenttime=datetime.now()
         
         
         # print(username,password)
         _users=db.session.query(User).filter(
-            User.username==username,User.password==password
+            User.employee_id==username,User.password==password
         ).all()
         if(len(_users)==0):
         
@@ -190,7 +190,31 @@ from flask_socketio import Namespace
 
 
 
+def getEmployeeList(socket,sessions):
+        _all_empolyees=db.session.query(Employee,MoniterSession)\
+            .outerjoin(MoniterSession,Employee.employee_id==MoniterSession.employee_id)\
+            .all()
+        # print(_all_empolyees)
+        _view_epees=[]
+        for item in _all_empolyees:
+            _dic=SqlToDict(item[0]).to_dict()
+            if item[1]==None:
+                _dic["moniter_session_id"]=None
+            else:
+                _dic["moniter_session_id"]=item[1].session_id
+            _view_epees.append(_dic)
+        
+        for session_ in sessions:
+            socket.emit("message",{
+            "employee_list":_view_epees,
+            "cmd":"returnemployeelist"
+        },room=session_)
+
 class MonitorSocket(Namespace):
+    def __init__(self, namespace=None):
+        super().__init__(namespace=namespace)
+        self.moniterSRCsessions=[]
+        
     def on_connect(self):
         print("connection:",request.sid)
         # self.emit("message",{"connection":"welcome!"})
@@ -210,6 +234,12 @@ class MonitorSocket(Namespace):
                 .filter(MoniterSession.session_id==request.sid)\
                 .delete()
             db.session.commit()
+            
+            if request.sid in self.moniterSRCsessions:
+                
+                self.moniterSRCsessions.remove(request.sid)
+            else:
+                getEmployeeList(self,self.moniterSRCsessions)
             pass
             
         except Exception as e:
@@ -226,7 +256,7 @@ class MonitorSocket(Namespace):
         
         pass
     def on_clientmessage(self,data):
-        print(data)
+        print("on_clientmessage",data)
         try:
             cmd=data['cmd']
             if cmd=="register":
@@ -235,18 +265,35 @@ class MonitorSocket(Namespace):
                 _monses.session_id=request.sid
                 db.session.add(_monses)
                 db.session.commit()
+                getEmployeeList(self,self.moniterSRCsessions)
+                pass
+            if cmd=="moniter":
+                self.moniterSRCsessions.append(request.sid)
                 pass
             elif cmd=="close":
                 
                 pass
             elif cmd=="cmdprocesslist":
+                _from_session=request.sid
+                _session=db.session.query(MoniterSession)\
+                    .filter(MoniterSession.employee_id==data["employee_id"]).first()
+                if _session==None:
+                    raise Exception("no such MoniterSession:"+data["employee_id"])
+                
+                _to_session=_session.session_id;
+                def pl_emit_to_from(data):
+  
+                    data["cmd"]="returnprocesslist"
+                    self.emit("message",data=data,room=_from_session)
+                
+                self.emit("message",{"cmd":"processlist"},room=_to_session,callback=pl_emit_to_from)
                 pass
             elif cmd=="cmdscreenshot":
                 _from_session=request.sid
                 _session=db.session.query(MoniterSession)\
                     .filter(MoniterSession.employee_id==data["employee_id"]).first()
                 if _session==None:
-                    raise Exception("no such MoniterSession:"+request.sid)
+                    raise Exception("no such MoniterSession:"+data["employee_id"])
                 
                 _to_session=_session.session_id;
                 
@@ -263,6 +310,25 @@ class MonitorSocket(Namespace):
                 self.emit("message",{"cmd":"screenshot"},room=_to_session,callback=emit_to_from)
                 
                 pass
+            elif cmd=="cmdemployeelist":
+                getEmployeeList(self,[request.sid])
+            elif cmd=="cmdtodaytime":
+                
+                
+                _from_session=request.sid
+                _session=db.session.query(MoniterSession)\
+                    .filter(MoniterSession.employee_id==data["employee_id"]).first()
+                if _session==None:
+                    raise Exception("no such MoniterSession:"+data["employee_id"])
+                
+                _to_session=_session.session_id;
+                def emit_to_from(data):
+                    data["cmd"]="returntodaytime"
+                    self.emit("message",data=data,room=_from_session)
+                
+                self.emit("message",{"cmd":"todaytime"},room=_to_session,callback=emit_to_from)
+                pass
+         
             pass
         except Exception as e:
             self.emit("message",{"cmd":"error","info":str(e)})

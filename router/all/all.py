@@ -91,17 +91,25 @@ def project():
         db.session.query(Project)\
             .filter(Project.project_id==_project_id)\
             .update({
-                Project.client_id:_client_id
+                Project.client_id:_client_id,
+                Project.project_price:_project["project_price"],
+                Project.project_enddate:_project["project_enddate"],
+                Project.project_begindate:_project["project_begindate"],
+                Project.project_name:_project["project_name"],
+                Project.project_period:_project["project_period"],
+                Project.project_state:_project["project_state"],
+                Project.project_type:_project["project_type"],
+                Project.amendments:_project["amendments"]
             })
         
         #更新评价:
         _selected_employee=json_["selected_employee"]
         for item in _selected_employee:
             db.session.query(EmployeeProject)\
-            .filter(EmployeeProject.employee_id==item.employee_id,EmployeeProject.project_id==_project_id)\
+            .filter(EmployeeProject.employee_id==item['employee_id'],EmployeeProject.project_id==_project_id)\
             .update(
                 {
-                    EmployeeProject.evaluate:item.evaluate
+                    EmployeeProject.evaluate:item['evaluate']
                 }
             )
         
@@ -111,12 +119,19 @@ def project():
             .filter(EmployeeProject.employee_id==delitem,EmployeeProject.project_id==_project_id).delete()
             pass
         
+        
         db.session.flush()
         for additem in _add_emps:
+            _contact=Contact()
+            _contact.toContactId=_project_id
+            _contact.employee_id=additem["employee_id"]
             _emppro=EmployeeProject()
             _emppro.project_id=_project_id
             _emppro.ep_office=additem["ep_office"]
             _emppro.employee_id=additem["employee_id"]
+            db.session.add(_contact)
+            
+            
             print("additem:",additem)
             db.session.add(_emppro)
             pass

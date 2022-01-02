@@ -129,6 +129,7 @@ def findpathsubfiles(steps,projectroot:dict):
 
 
 
+
 def createProjectRootFolder(rootname,collection_:wrappers.Collection):
     result=collection_.insert_one(
         {
@@ -262,6 +263,9 @@ def deletefolder(projectfileid,rootpath:str,collection_:wrappers.Collection,mong
     
     
     
+
+    
+    
     collection_.update_one(
         {
           "_id":ObjectId(projectfileid)
@@ -275,6 +279,90 @@ def deletefolder(projectfileid,rootpath:str,collection_:wrappers.Collection,mong
     return(
                 None,"deletefolder_success"
             )
+
+
+def movefolder(projectfileid,rootpath:str,torootpath:str,collection_:wrappers.Collection,mongo:flask_pymongo.MongoClient):
+    projectroot:dict
+    
+    projectroot=collection_.find_one(
+        {
+            "_id":ObjectId(projectfileid)
+        }
+    )
+    
+    if projectroot==None:
+        return (None,"no such project_id")
+    
+    steps=pathparser(rootpath)
+    # print("296:",steps)
+    (result,info)=haspath(steps,projectroot)
+    if result==false:
+        return(None,"no such src path")
+    
+    
+    '''
+    recursive delete file needs function
+    '''
+   
+    tosteps=pathparser(torootpath)
+    (result,info)=haspath(steps,projectroot)
+    if result==false:
+        return(None,"no such dsc path")
+    
+    
+    srckey=projectroot
+    for key in steps:
+        srckey=srckey[key]
+    
+    # (files,info)=findpathsubfiles(steps,projectroot)
+    
+    print("steps",steps)
+    print("projectroot",projectroot)
+    # print("files:",files)
+    print("tosteps",tosteps)
+
+    
+    # from .fileutils import deletefromMongo
+    # if files!=None:
+    #     for file_id in files:
+    #         deletefromMongo(mongo,file_id)
+    
+    
+    # collection_.find_one(
+    #             {
+    #       "_id":ObjectId(projectfileid)
+          
+    #     },
+    # )
+    
+    collection_.update_one(
+        {
+          "_id":ObjectId(projectfileid)
+        },
+        {
+            "$set":{
+                 ".".join(tosteps)+"."+steps[-1]:srckey
+            }
+        }
+    )
+    
+    collection_.update_one(
+        {
+          "_id":ObjectId(projectfileid)
+        },
+        {
+            "$unset":{
+                 ".".join(steps):""
+            }
+        }
+    )
+    
+    
+    
+    return(
+                None,"move_success"
+            )
+
 
 
 def updatefolder(projectfileid,rootpath:str,newfoldername:str,collection_:wrappers.Collection):

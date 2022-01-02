@@ -21,9 +21,21 @@ def getpersonfiles():
         _ep_id=json_["my_id"]
         _ep_office=json_["my_office"]
         
-        _db_files=db.session.query(ProjectFile,Project,Employee)\
-            .filter(ProjectFile.project_id==Project.project_id,ProjectFile.employee_id==Employee.employee_id)\
-            .filter(ProjectFile.project_id==_project_id,ProjectFile.employee_id==_ep_id).all()
+        
+        if _ep_office=="老板":
+            pass
+            _db_files=db.session.query(ProjectFile,Project,Employee)\
+                .filter(ProjectFile.project_id==Project.project_id,ProjectFile.employee_id==Employee.employee_id)\
+                .filter(ProjectFile.project_id==_project_id).all()
+        elif _ep_office[-2:]=="主管":
+            _db_files=db.session.query(ProjectFile,Project,Employee)\
+                .filter(ProjectFile.project_id==Project.project_id,ProjectFile.employee_id==Employee.employee_id)\
+                .filter(ProjectFile.project_id==_project_id).all()
+            pass
+        else :
+            _db_files=db.session.query(ProjectFile,Project,Employee)\
+                .filter(ProjectFile.project_id==Project.project_id,ProjectFile.employee_id==Employee.employee_id)\
+                .filter(ProjectFile.project_id==_project_id,ProjectFile.employee_id==_ep_id).all()
         _files=[]
         
         for item in _db_files:
@@ -53,6 +65,8 @@ def projectnewfiles():
     try:
         state="yes"
         json_= request.get_json()
+        
+        print("json:",json_)
         _project_id=json_["project_id"]
         _ep_id=json_["my_id"]
         _ep_office=json_["my_office"]   

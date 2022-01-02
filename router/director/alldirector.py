@@ -32,7 +32,7 @@ def newproject():
         project_name = json_["project_name"],
         project_begindate = to_pythontime(json_["project_begindate"]),
         project_period = json_["project_period"],
-        # project_price = ,
+        project_price = json_["project_price"],
         # project_enddate = db.Column(db.Date)
         project_periodstage = json_["project_periodstage"],
         project_type = json_["project_type"],

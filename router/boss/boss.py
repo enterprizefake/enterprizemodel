@@ -62,11 +62,10 @@ def DeleteEmployee():    #删除员工
         what = my_office + my_name + '解雇了'+user.employee_office+user.employee_name  # 记录操作日志
         operate = EmployeeOperate(employee_id=my_id, operate_date=now_time,operate_what=what)
         db.session.add(operate)
-        contacts=db.session.query(Contact).filter_by(employee_id=employee_id).all()
-        for contact in contacts:   #将这个员工从他所参加的所有项目中移除
-            db.session.delete(contact)
-        db.session.delete(user)      #公司里删除此员工相关信息
+        sql="delete from employee where employee_id=%s"%employee_id
+        db.session.execute(sql)
         db.session.commit()
+
         return jsonify(
             {
                 "state":"yes"

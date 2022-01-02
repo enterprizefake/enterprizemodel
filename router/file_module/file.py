@@ -1,3 +1,4 @@
+
 import io
 import json
 from traceback import print_exc
@@ -177,6 +178,8 @@ def uploadtostore():
         
         new_id=None
         uploaded_file=request.files['file']
+        uploaded_file.mimetype_params["userid"]=0
+        uploaded_file.mimetype_params["level"]=0
         if uploaded_file.filename != '':
             new_id=uploadtoMongo(mongo,uploaded_file)
         
@@ -185,7 +188,7 @@ def uploadtostore():
 
         
         return jsonify({
-            "id":str(new_id),
+            "id":str(new_id["id"]),
             "result":"success"
         })
     except Exception as e:
@@ -476,3 +479,34 @@ def operationfile(operationtype):
                 "result":str(e)
             }
         )
+
+@fileblueprint.route("/movefolder",methods=["POST","GET"])
+def movefile():
+    try:
+        state="yes"
+        json_= request.get_json()
+        projectrootid=json_["rootid"]
+        srcpath=json_["srcpath"]
+        dscpath=json_["dscpath"]
+        
+        from .folder import movefolder
+        
+        (obj,info)=movefolder(projectrootid,srcpath,dscpath,mongo[fileConfig.dbName].get_collection(fileConfig.defaultCollection),mongo)
+        if info!="move_success":
+            raise Exception(info)
+    
+        return jsonify(
+            {
+                "state":state
+            }
+        )
+    except Exception as e:
+        print(e)
+        return jsonify(
+            {
+                "state":"no",
+                "info":str(e)
+            }
+        )
+    finally:
+        db.session.close()

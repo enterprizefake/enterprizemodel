@@ -32,13 +32,15 @@ def login():
                             employee_id=employee['employee_id'])
         db.session.add(x)
         db.session.commit()
+        print(dic)
+        
 
     except Exception:
         dic["state"] = "no"
     finally:
         db.session.close()
-    print(dic)
-    return dic
+        return jsonify(dic)
+
 
 
 @llr.route("/register", methods=['POST'])
@@ -50,11 +52,15 @@ def register():
             print(js)
         else:
             print("gre")
+        
+        
     except Exception:
         dic["state"] = "no"
     finally:
+        
         db.session.close()
-    return dic
+        return jsonify(dic)
+
 
 
 @llr.route("/allmessages", methods=['POST'])
@@ -98,7 +104,7 @@ def allmessages():
     finally:
         db.session.close()
     print(dic)
-    return dic
+    return jsonify(dic)
 
 @llr.route("/addmessage", methods=['POST'])
 def addmessage():
@@ -120,7 +126,7 @@ def addmessage():
         dic["state"] = "no"
     finally:
         db.session.close()
-    return dic
+    return jsonify(dic)
 
 
 @llr.route("/showmessage", methods=['POST'])
@@ -145,7 +151,7 @@ def showmessage():
     # print(dic)
     finally:
         db.session.close()
-    return dic
+    return jsonify(dic)
 
 
 @llr.route("/all/notes", methods=['POST'])
@@ -167,7 +173,7 @@ def notes():
         dic["state"] = "no"
     finally:
         db.session.close()
-    return dic
+    return jsonify(dic)
 
 
 @llr.route("/all/alterpassword", methods=['POST'])
@@ -183,4 +189,4 @@ def alterpassword():
         dic["state"] = "no"
     finally:
         db.session.close()
-    return dic
+    return jsonify(dic)

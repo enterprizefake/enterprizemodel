@@ -21,8 +21,8 @@ class Client(db.Model):
 class Contact(db.Model):
     __tablename__ = 'contact'
 
-    toContactId = db.Column(db.ForeignKey('session.toContactId'), primary_key=True, nullable=False)
-    employee_id = db.Column(db.ForeignKey('employee.employee_id'), primary_key=True, nullable=False, index=True)
+    toContactId = db.Column(db.ForeignKey('session.toContactId', ondelete='CASCADE'), primary_key=True, nullable=False)
+    employee_id = db.Column(db.ForeignKey('employee.employee_id', ondelete='CASCADE'), primary_key=True, nullable=False, index=True)
     empty = db.Column(db.Integer)
 
     employee = db.relationship('Employee', primaryjoin='Contact.employee_id == Employee.employee_id', backref='contacts')
@@ -46,7 +46,7 @@ class Employee(db.Model):
 class User(Employee):
     __tablename__ = 'user'
 
-    employee_id = db.Column(db.ForeignKey('employee.employee_id'), primary_key=True)
+    employee_id = db.Column(db.ForeignKey('employee.employee_id', ondelete='CASCADE'), primary_key=True)
     password = db.Column(db.String(50, 'utf8mb4_bin'), nullable=False)
 
 
@@ -54,7 +54,7 @@ class EmployeeOperate(db.Model):
     __tablename__ = 'employee_operate'
 
     operate_id = db.Column(db.Integer, primary_key=True)
-    employee_id = db.Column(db.ForeignKey('employee.employee_id'), index=True)
+    employee_id = db.Column(db.ForeignKey('employee.employee_id', ondelete='CASCADE'), index=True)
     operate_date = db.Column(db.String(30, 'utf8mb4_bin'))
     operate_what = db.Column(db.String(200, 'utf8mb4_bin'))
 
@@ -64,8 +64,8 @@ class EmployeeOperate(db.Model):
 class EmployeeProject(db.Model):
     __tablename__ = 'employee_project'
 
-    employee_id = db.Column(db.ForeignKey('employee.employee_id'), primary_key=True, nullable=False)
-    project_id = db.Column(db.ForeignKey('project.project_id'), primary_key=True, nullable=False, index=True)
+    employee_id = db.Column(db.ForeignKey('employee.employee_id', ondelete='CASCADE'), primary_key=True, nullable=False)
+    project_id = db.Column(db.ForeignKey('project.project_id', ondelete='CASCADE'), primary_key=True, nullable=False, index=True)
     ep_office = db.Column(db.String(20, 'utf8mb4_bin'))
     evaluate = db.Column(db.Integer)
 
@@ -76,7 +76,7 @@ class EmployeeProject(db.Model):
 class Message(db.Model):
     __tablename__ = 'message'
     __table_args__ = (
-        db.ForeignKeyConstraint(['toContactId', 'employee_id'], ['contact.toContactId', 'contact.employee_id']),
+        db.ForeignKeyConstraint(['toContactId', 'employee_id'], ['contact.toContactId', 'contact.employee_id'], ondelete='CASCADE'),
         db.Index('FK_R14', 'toContactId', 'employee_id')
     )
 
@@ -96,7 +96,7 @@ class Message(db.Model):
 class MoniterImage(db.Model):
     __tablename__ = 'moniter_image'
 
-    employee_id = db.Column(db.ForeignKey('employee.employee_id'), nullable=False, index=True)
+    employee_id = db.Column(db.ForeignKey('employee.employee_id', ondelete='CASCADE'), nullable=False, index=True)
     src_id = db.Column(db.Integer, primary_key=True)
     src_address = db.Column(db.String(90, 'utf8mb4_bin'))
     date = db.Column(db.DateTime)
@@ -108,7 +108,8 @@ class MoniterSession(db.Model):
     __tablename__ = 'moniter_session'
 
     session_id = db.Column(db.String(64, 'utf8mb4_bin'), primary_key=True, nullable=False)
-    employee_id = db.Column(db.ForeignKey('employee.employee_id'), primary_key=True, nullable=False, index=True)
+    employee_id = db.Column(db.ForeignKey('employee.employee_id', ondelete='CASCADE'), primary_key=True, nullable=False, index=True)
+    employee_office = db.Column(db.String(64, 'utf8mb4_bin'))
 
     employee = db.relationship('Employee', primaryjoin='MoniterSession.employee_id == Employee.employee_id', backref='moniter_sessions')
 
@@ -116,7 +117,7 @@ class MoniterSession(db.Model):
 class MonitorLogio(db.Model):
     __tablename__ = 'monitor_logio'
 
-    employee_id = db.Column(db.Integer, nullable=False)
+    employee_id = db.Column(db.String(50), nullable=False)
     type = db.Column(db.String(32))
     currenttime = db.Column(db.DateTime)
     record_id = db.Column(db.Integer, primary_key=True)
@@ -135,7 +136,7 @@ class Project(db.Model):
     __tablename__ = 'project'
 
     project_id = db.Column(db.Integer, primary_key=True)
-    client_id = db.Column(db.ForeignKey('client.client_id'), index=True)
+    client_id = db.Column(db.ForeignKey('client.client_id', ondelete='CASCADE'), index=True)
     project_name = db.Column(db.String(50, 'utf8mb4_bin'), nullable=False)
     project_begindate = db.Column(db.Date, nullable=False)
     project_period = db.Column(db.String(50, 'utf8mb4_bin'))
@@ -152,7 +153,7 @@ class Project(db.Model):
 class ProjectFile(db.Model):
     __tablename__ = 'project_file'
     __table_args__ = (
-        db.ForeignKeyConstraint(['employee_id', 'project_id'], ['employee_project.employee_id', 'employee_project.project_id']),
+        db.ForeignKeyConstraint(['employee_id', 'project_id'], ['employee_project.employee_id', 'employee_project.project_id'], ondelete='CASCADE'),
         db.Index('FK_Relationship_10', 'employee_id', 'project_id')
     )
 
