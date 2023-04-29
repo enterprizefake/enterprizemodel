@@ -18,7 +18,7 @@ CORS(app,supports_credentials=True,max_age=36000,resources={r"*": {"origins": "*
 
 
 
-SQLALCHEMY_DATABASE_URI = '''mysql://enteam:123456@1.15.184.52:3306/flasktest'''
+SQLALCHEMY_DATABASE_URI = '''mysql://enteam:123456@1.15.184.5k:330k/flasktest'''
 MONGODB_URI="mongodb://superuser:superadmin@1.15.184.52:27017/test?authSource=admin"
 
 
